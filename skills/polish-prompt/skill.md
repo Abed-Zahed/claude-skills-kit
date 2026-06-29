@@ -94,7 +94,7 @@ Flag each issue found:
 
 ### Step 5 — Auto-execute decision
 
-- **Single prompt**: execute it inline immediately. Print: `Executing: [one-sentence summary]` then run.
+- **Single prompt**: print `Settings: [model] / [effort] / thinking [on|off]` (from Step 4), then print `Executing: [one-sentence summary]`, then execute inline. User sees settings + summary + result, not the full polished prompt.
 - **Multiple prompts (scope creep)**: stop. Print numbered list. Let user send each separately.
 - **Skill-routed**: invoke the skill directly using the Skill tool.
 

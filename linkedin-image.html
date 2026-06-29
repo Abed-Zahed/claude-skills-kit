@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>LinkedIn Image — Claude Skills Kit</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: #0d1117;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 1200px;
+      height: 628px;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, monospace;
+      overflow: hidden;
+    }
+
+    .canvas {
+      width: 1200px;
+      height: 628px;
+      position: relative;
+      background: #0d1117;
+    }
+
+    /* subtle grid */
+    .canvas::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(48,54,61,0.3) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(48,54,61,0.3) 1px, transparent 1px);
+      background-size: 40px 40px;
+    }
+
+    /* glow behind center */
+    .glow {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 300px;
+      height: 300px;
+      background: radial-gradient(circle, rgba(88,166,255,0.12) 0%, transparent 70%);
+      border-radius: 50%;
+      pointer-events: none;
+    }
+
+    /* center node */
+    .center {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 148px;
+      height: 148px;
+      background: linear-gradient(135deg, #1a2744 0%, #0d1f3c 100%);
+      border: 2px solid #58a6ff;
+      border-radius: 50%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 10;
+      box-shadow: 0 0 32px rgba(88,166,255,0.35), inset 0 1px 0 rgba(88,166,255,0.2);
+    }
+    .center .cmd {
+      color: #58a6ff;
+      font-size: 13px;
+      font-weight: 700;
+      font-family: monospace;
+      letter-spacing: 0.02em;
+    }
+    .center .label {
+      color: #79c0ff;
+      font-size: 9.5px;
+      margin-top: 4px;
+      text-align: center;
+      line-height: 1.4;
+      padding: 0 8px;
+      opacity: 0.85;
+    }
+
+    /* SVG connector layer */
+    .connectors {
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+    }
+
+    /* skill nodes */
+    .skill {
+      position: absolute;
+      width: 136px;
+      background: #161b22;
+      border: 1px solid #30363d;
+      border-radius: 10px;
+      padding: 11px 13px;
+      z-index: 10;
+      transition: border-color 0.2s;
+    }
+    .skill .cmd {
+      font-family: monospace;
+      font-size: 11.5px;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+    .skill .desc {
+      font-size: 9px;
+      color: #8b949e;
+      line-height: 1.4;
+    }
+
+    /* color variants */
+    .c-green  { border-color: #3fb950; }
+    .c-green .cmd  { color: #3fb950; }
+    .c-orange { border-color: #f0883e; }
+    .c-orange .cmd { color: #f0883e; }
+    .c-purple { border-color: #bc8cff; }
+    .c-purple .cmd { color: #bc8cff; }
+    .c-yellow { border-color: #e3b341; }
+    .c-yellow .cmd { color: #e3b341; }
+    .c-pink   { border-color: #f778ba; }
+    .c-pink .cmd   { color: #f778ba; }
+    .c-teal   { border-color: #39d353; }
+    .c-teal .cmd   { color: #39d353; }
+    .c-red    { border-color: #ff7b72; }
+    .c-red .cmd    { color: #ff7b72; }
+
+    /* positions — 7 nodes around center (600,314) */
+    /* top */
+    .n-top       { top: 62px;  left: 532px; }
+    /* top-right */
+    .n-topright  { top: 128px; left: 786px; }
+    /* right */
+    .n-right     { top: 265px; left: 886px; }
+    /* bottom-right */
+    .n-botright  { top: 406px; left: 786px; }
+    /* bottom */
+    .n-bot       { top: 462px; left: 532px; }
+    /* bottom-left */
+    .n-botleft   { top: 406px; left: 278px; }
+    /* left */
+    .n-left      { top: 128px; left: 278px; }
+
+    /* title block */
+    .title-block {
+      position: absolute;
+      top: 28px;
+      left: 40px;
+    }
+    .title-block h1 {
+      font-size: 17px;
+      color: #f0f6fc;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+    }
+    .title-block p {
+      font-size: 11px;
+      color: #8b949e;
+      margin-top: 3px;
+    }
+
+    /* footer */
+    .footer {
+      position: absolute;
+      bottom: 22px;
+      left: 40px;
+      right: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .footer .gh {
+      font-family: monospace;
+      font-size: 11px;
+      color: #58a6ff;
+      background: #161b22;
+      border: 1px solid #30363d;
+      padding: 5px 12px;
+      border-radius: 6px;
+    }
+    .footer .tag {
+      font-size: 10px;
+      color: #8b949e;
+    }
+
+    /* hook badge */
+    .hook-badge {
+      position: absolute;
+      bottom: 22px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #1a1f3a;
+      border: 1px solid #58a6ff;
+      border-radius: 20px;
+      padding: 5px 14px;
+      font-size: 9.5px;
+      color: #79c0ff;
+      font-family: monospace;
+      white-space: nowrap;
+    }
+  </style>
+</head>
+<body>
+<div class="canvas">
+  <div class="glow"></div>
+
+  <!-- SVG connectors -->
+  <svg class="connectors" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <marker id="arrow" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto">
+        <path d="M0,0 L0,6 L6,3 z" fill="rgba(88,166,255,0.5)"/>
+      </marker>
+    </defs>
+    <!-- center is at 600, 314 -->
+    <!-- top: node center ~600, 62+50=112 -->
+    <line x1="600" y1="238" x2="600" y2="162" stroke="rgba(88,166,255,0.25)" stroke-width="1.5" stroke-dasharray="4 4" marker-end="url(#arrow)"/>
+    <!-- top-right: node center ~854, 128+40=168 -->
+    <line x1="648" y1="265" x2="800" y2="186" stroke="rgba(88,166,255,0.25)" stroke-width="1.5" stroke-dasharray="4 4" marker-end="url(#arrow)"/>
+    <!-- right: node center ~954, 265+40=305 -->
+    <line x1="674" y1="305" x2="886" y2="305" stroke="rgba(88,166,255,0.25)" stroke-width="1.5" stroke-dasharray="4 4" marker-end="url(#arrow)"/>
+    <!-- bottom-right: node center ~854, 406+40=446 -->
+    <line x1="648" y1="355" x2="800" y2="424" stroke="rgba(88,166,255,0.25)" stroke-width="1.5" stroke-dasharray="4 4" marker-end="url(#arrow)"/>
+    <!-- bottom: node center ~600, 462+40=502 -->
+    <line x1="600" y1="390" x2="600" y2="462" stroke="rgba(88,166,255,0.25)" stroke-width="1.5" stroke-dasharray="4 4" marker-end="url(#arrow)"/>
+    <!-- bottom-left: node center ~346, 406+40=446 -->
+    <line x1="552" y1="355" x2="400" y2="424" stroke="rgba(88,166,255,0.25)" stroke-width="1.5" stroke-dasharray="4 4" marker-end="url(#arrow)"/>
+    <!-- left: node center ~346, 128+40=168 -->
+    <line x1="526" y1="265" x2="414" y2="186" stroke="rgba(88,166,255,0.25)" stroke-width="1.5" stroke-dasharray="4 4" marker-end="url(#arrow)"/>
+  </svg>
+
+  <!-- Center node -->
+  <div class="center">
+    <div class="cmd">/polish-prompt</div>
+    <div class="label">router &amp;<br>auto-executor</div>
+  </div>
+
+  <!-- 7 skill nodes -->
+  <div class="skill c-green n-top">
+    <div class="cmd">/modern-engineer</div>
+    <div class="desc">5-phase build workflow<br>brainstorm → debug</div>
+  </div>
+
+  <div class="skill c-orange n-topright">
+    <div class="cmd">/web-scraping</div>
+    <div class="desc">Exa semantic search<br>+ Firecrawl scraping</div>
+  </div>
+
+  <div class="skill c-purple n-right">
+    <div class="cmd">/ingest-resource</div>
+    <div class="desc">Save any resource to<br>structured knowledge/</div>
+  </div>
+
+  <div class="skill c-yellow n-botright">
+    <div class="cmd">/improve-system</div>
+    <div class="desc">5-mode process<br>review &amp; audit</div>
+  </div>
+
+  <div class="skill c-pink n-bot">
+    <div class="cmd">/internal-focus-group</div>
+    <div class="desc">Multi-agent panel<br>from real profiles</div>
+  </div>
+
+  <div class="skill c-teal n-botleft">
+    <div class="cmd">/ask-the-board</div>
+    <div class="desc">Advisory board sim<br>in each advisor's voice</div>
+  </div>
+
+  <div class="skill c-red n-left">
+    <div class="cmd">/ingest-resource</div>
+    <div class="desc">Articles, PDFs, notes<br>→ wikilinked knowledge</div>
+  </div>
+
+  <!-- title -->
+  <div class="title-block">
+    <h1>Claude Skills Kit</h1>
+    <p>7 interconnected Claude Code skills — open source</p>
+  </div>
+
+  <!-- hook badge -->
+  <div class="hook-badge">+ UserPromptSubmit hook — always-on vagueness detection</div>
+
+  <!-- footer -->
+  <div class="footer">
+    <div class="gh">github.com/Abed-Zahed/claude-skills-kit</div>
+    <div class="tag">#ClaudeCode &nbsp;#OpenSource &nbsp;#AITools</div>
+  </div>
+</div>
+</body>
+</html>

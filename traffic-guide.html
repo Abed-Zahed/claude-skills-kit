@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>claude-skills-kit — Traffic Guide</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: #0d1117;
+      color: #c9d1d9;
+      line-height: 1.6;
+      padding: 40px 20px;
+    }
+    .container { max-width: 860px; margin: 0 auto; }
+    h1 {
+      font-size: 1.6rem;
+      color: #f0f6fc;
+      margin-bottom: 6px;
+    }
+    .subtitle {
+      color: #8b949e;
+      font-size: 0.9rem;
+      margin-bottom: 36px;
+    }
+    .repo-link {
+      display: inline-block;
+      background: #161b22;
+      border: 1px solid #30363d;
+      border-radius: 6px;
+      padding: 8px 14px;
+      color: #58a6ff;
+      text-decoration: none;
+      font-size: 0.85rem;
+      margin-bottom: 36px;
+      font-family: monospace;
+    }
+    .repo-link:hover { border-color: #58a6ff; }
+
+    .platform {
+      background: #161b22;
+      border: 1px solid #30363d;
+      border-radius: 10px;
+      padding: 24px 28px;
+      margin-bottom: 24px;
+    }
+    .platform-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+    .badge {
+      font-size: 0.7rem;
+      font-weight: 600;
+      padding: 3px 8px;
+      border-radius: 20px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .badge-done     { background: #1a3a2a; color: #3fb950; border: 1px solid #3fb950; }
+    .badge-pending  { background: #2d2a1a; color: #e3b341; border: 1px solid #e3b341; }
+    .badge-todo     { background: #1a1f3a; color: #79c0ff; border: 1px solid #79c0ff; }
+    .badge-optional { background: #2a1a2a; color: #bc8cff; border: 1px solid #bc8cff; }
+
+    .platform h2 {
+      font-size: 1.05rem;
+      color: #f0f6fc;
+      font-weight: 600;
+    }
+    .platform p {
+      color: #8b949e;
+      font-size: 0.85rem;
+      margin-bottom: 14px;
+    }
+    ol {
+      padding-left: 20px;
+    }
+    ol li {
+      margin-bottom: 10px;
+      font-size: 0.9rem;
+      color: #c9d1d9;
+    }
+    ol li strong { color: #f0f6fc; }
+    a { color: #58a6ff; text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    .copy-block {
+      background: #0d1117;
+      border: 1px solid #30363d;
+      border-radius: 6px;
+      padding: 12px 16px;
+      font-family: monospace;
+      font-size: 0.82rem;
+      color: #a5d6ff;
+      margin: 10px 0;
+      white-space: pre-wrap;
+      word-break: break-word;
+      position: relative;
+    }
+    .copy-label {
+      font-size: 0.72rem;
+      color: #8b949e;
+      margin-bottom: 4px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .note {
+      background: #1c2128;
+      border-left: 3px solid #e3b341;
+      border-radius: 0 6px 6px 0;
+      padding: 10px 14px;
+      font-size: 0.85rem;
+      color: #b3914a;
+      margin: 12px 0;
+    }
+    .done-note {
+      background: #111a14;
+      border-left: 3px solid #3fb950;
+      border-radius: 0 6px 6px 0;
+      padding: 10px 14px;
+      font-size: 0.85rem;
+      color: #3fb950;
+      margin: 12px 0;
+    }
+    .divider {
+      border: none;
+      border-top: 1px solid #21262d;
+      margin: 36px 0;
+    }
+    .impact-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 12px;
+      font-size: 0.85rem;
+    }
+    .impact-table th {
+      text-align: left;
+      color: #8b949e;
+      font-weight: 600;
+      padding: 6px 10px;
+      border-bottom: 1px solid #30363d;
+    }
+    .impact-table td {
+      padding: 8px 10px;
+      border-bottom: 1px solid #21262d;
+      color: #c9d1d9;
+    }
+    .impact-table tr:last-child td { border-bottom: none; }
+    .high   { color: #3fb950; font-weight: 600; }
+    .medium { color: #e3b341; font-weight: 600; }
+    .low    { color: #8b949e; }
+  </style>
+</head>
+<body>
+<div class="container">
+
+  <h1>claude-skills-kit — Traffic &amp; Visibility Guide</h1>
+  <div class="subtitle">Personal reference. Last updated: 2026-06-29</div>
+  <a class="repo-link" href="https://github.com/Abed-Zahed/claude-skills-kit" target="_blank">github.com/Abed-Zahed/claude-skills-kit</a>
+
+  <!-- IMPACT SUMMARY -->
+  <div class="platform">
+    <div class="platform-header">
+      <h2>Impact Summary</h2>
+    </div>
+    <table class="impact-table">
+      <thead>
+        <tr><th>Action</th><th>Impact</th><th>Status</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>GitHub repo live + 7 topics</td><td class="high">High</td><td>Done</td></tr>
+        <tr><td>ComposioHQ PR #1181</td><td class="high">High</td><td>Pending merge</td></tr>
+        <tr><td>Pin repo on GitHub profile</td><td class="high">High</td><td>Todo (30 sec)</td></tr>
+        <tr><td>LinkedIn post</td><td class="high">High</td><td>Draft ready — time it</td></tr>
+        <tr><td>Reddit r/ClaudeAI</td><td class="medium">Medium</td><td>Todo</td></tr>
+        <tr><td>Reddit r/ClaudeCode</td><td class="medium">Medium</td><td>Todo</td></tr>
+        <tr><td>LobeHub submission</td><td class="medium">Medium</td><td>Needs account</td></tr>
+        <tr><td>awesomeskill.ai</td><td class="low">Low</td><td>Login issue — skip</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <hr class="divider">
+
+  <!-- 1. GITHUB PIN -->
+  <div class="platform">
+    <div class="platform-header">
+      <span class="badge badge-todo">To Do</span>
+      <h2>1. Pin the Repo on Your GitHub Profile</h2>
+    </div>
+    <p>Pinned repos appear at the top of your profile page. Anyone who views your profile sees this first. Takes 30 seconds.</p>
+    <ol>
+      <li>Go to <a href="https://github.com/Abed-Zahed" target="_blank">github.com/Abed-Zahed</a></li>
+      <li>Click <strong>"Customize your profile"</strong> (top right of the profile page)</li>
+      <li>Click <strong>"Edit pinned repositories"</strong></li>
+      <li>Search for <strong>claude-skills-kit</strong> and select it</li>
+      <li>Click <strong>Save pins</strong></li>
+    </ol>
+    <div class="note">Tip: pin a max of 3 repos — skills kit, your telecom project, and one more. More than 3 dilutes attention.</div>
+  </div>
+
+  <!-- 2. COMPOSIO PR -->
+  <div class="platform">
+    <div class="platform-header">
+      <span class="badge badge-pending">Pending</span>
+      <h2>2. ComposioHQ/awesome-claude-skills PR #1181</h2>
+    </div>
+    <p>PR already submitted. Once merged, the repo appears in a curated list with 1000+ entries and gets indexed by Google.</p>
+    <ol>
+      <li>Check status: <a href="https://github.com/ComposioHQ/awesome-claude-skills/pull/1181" target="_blank">github.com/ComposioHQ/awesome-claude-skills/pull/1181</a></li>
+      <li>If no activity after 7 days, leave a comment: <em>"Hi — friendly ping to check if this PR is in scope. Happy to adjust the description if needed."</em></li>
+      <li>Nothing else needed until they respond.</li>
+    </ol>
+    <div class="done-note">Entry added under "Productivity &amp; Organization" — description and link are correct.</div>
+  </div>
+
+  <!-- 3. LOBEHUB -->
+  <div class="platform">
+    <div class="platform-header">
+      <span class="badge badge-todo">To Do</span>
+      <h2>3. LobeHub Skills Marketplace</h2>
+    </div>
+    <p>LobeHub has a large skills marketplace. Requires account creation and CLI or web submission.</p>
+    <ol>
+      <li>Go to <a href="https://lobehub.com" target="_blank">lobehub.com</a> and sign in (or create account)</li>
+      <li>Navigate to your profile dashboard — look for <strong>"My Skills"</strong> or <strong>"Publish"</strong></li>
+      <li>If CLI works, open PowerShell in <code>D:\Projects\claude-skills-kit</code> and run:</li>
+    </ol>
+    <div class="copy-label">PowerShell</div>
+    <div class="copy-block">npx @lobehub/market-cli login
+npx @lobehub/market-cli skill publish</div>
+    <ol start="4">
+      <li>If CLI browser auth fails again, look for a <strong>"Submit via GitHub URL"</strong> option in the web dashboard</li>
+      <li>Paste: <code>https://github.com/Abed-Zahed/claude-skills-kit</code></li>
+    </ol>
+    <div class="note">The CLI needs to open a browser for OAuth. If it fails headlessly, try running it from a regular PowerShell terminal (not inside VS Code).</div>
+  </div>
+
+  <!-- 4. REDDIT -->
+  <div class="platform">
+    <div class="platform-header">
+      <span class="badge badge-todo">To Do</span>
+      <h2>4. Reddit — r/ClaudeAI and r/ClaudeCode</h2>
+    </div>
+    <p>Post to both communities. These are the fastest way to get real users and early GitHub stars.</p>
+
+    <strong style="color:#f0f6fc; display:block; margin-bottom:8px;">r/ClaudeAI</strong>
+    <ol>
+      <li>Go to <a href="https://reddit.com/r/ClaudeAI/submit" target="_blank">reddit.com/r/ClaudeAI/submit</a></li>
+      <li>Post type: <strong>Link</strong> or <strong>Text</strong></li>
+    </ol>
+    <div class="copy-label">Title</div>
+    <div class="copy-block">I built a 7-skill Claude Code kit — prompt polishing, engineering workflow, advisory board, focus group, and more</div>
+    <div class="copy-label">Body</div>
+    <div class="copy-block">I've been building out a personal skill system for Claude Code and decided to open-source it.
+
+The kit includes 7 interconnected skills:
+- /polish-prompt — rewrites vague prompts, routes to the right skill, auto-executes clean outputs
+- /modern-engineer — 5-phase build workflow (brainstorm → plan → work → review → debug)
+- /web-scraping — Exa + Firecrawl for research tasks
+- /ingest-resource — saves any resource to structured knowledge folders
+- /improve-system — 5-mode process review
+- /ask-the-board — advisory board simulator with real advisor research
+- /internal-focus-group — multi-agent panel from ingested people profiles
+
+Also includes a UserPromptSubmit hook that nudges you on short/vague prompts.
+
+GitHub: https://github.com/Abed-Zahed/claude-skills-kit
+
+The hook fires on every prompt and is bypassed with * or # prefix — borrowed the concept from claude-code-prompt-improver (credited in README).</div>
+
+    <strong style="color:#f0f6fc; display:block; margin: 16px 0 8px;">r/ClaudeCode</strong>
+    <ol>
+      <li>Go to <a href="https://reddit.com/r/ClaudeCode/submit" target="_blank">reddit.com/r/ClaudeCode/submit</a></li>
+      <li>Use the same title and body — it's the right audience</li>
+    </ol>
+    <div class="note">Post to both on the same day, ideally Tuesday–Thursday between 9am–12pm UTC. Don't post both simultaneously — space them 2–3 hours apart.</div>
+  </div>
+
+  <!-- 5. LINKEDIN -->
+  <div class="platform">
+    <div class="platform-header">
+      <span class="badge badge-todo">To Do — Time it</span>
+      <h2>5. LinkedIn Post</h2>
+    </div>
+    <p>Post to your engineering network. Positions you as an RF engineer who also builds AI tooling — a strong differentiator for GCC and EU technical roles.</p>
+
+    <div class="copy-label">Post — ready to copy-paste</div>
+    <div class="copy-block">I spend a lot of time in Claude Code. So I built a system to make it faster.
+
+After months of iterating on my workflow as an RF/telecom engineer, I open-sourced a kit of 7 Claude Code skills that work as a complete system:
+
+→ /polish-prompt — rewrites vague prompts before they reach the model, routes to the right tool automatically, and executes the clean output inline
+→ /modern-engineer — forces a 5-phase workflow (brainstorm → plan → build → review → debug) so you never skip straight to code
+→ /ask-the-board — spins up 2 domain-expert advisors for any decision and consults them in their own voice
+→ /web-scraping, /ingest-resource, /improve-system, /internal-focus-group
+
+It also includes a hook that fires on every prompt and nudges you when you're about to send something vague.
+
+Everything is open source: github.com/Abed-Zahed/claude-skills-kit
+
+Building this taught me more about structured AI workflows than any course. The engineering mindset — define inputs, define outputs, verify results — translates directly.
+
+#ClaudeCode #AITools #RFEngineering #OpenSource #Productivity</div>
+
+    <div class="note">
+      <strong>Timing relative to telecom posts:</strong><br><br>
+      Best pattern for a single week:<br>
+      • <strong>Mon or Tue</strong> — Telecom/RF post (establishes engineering credibility)<br>
+      • <strong>Thu or Fri</strong> — This AI tools post (shows breadth, rides the engagement from the first post)<br><br>
+      Do not post both on the same day — LinkedIn's algorithm suppresses multiple posts from the same person within 24 hours. Space by at least 2 days. Post between 8–10am your local time (Gulf Standard Time = UTC+4).
+    </div>
+
+    <ol>
+      <li>Go to <a href="https://linkedin.com/feed" target="_blank">linkedin.com/feed</a></li>
+      <li>Click <strong>"Start a post"</strong></li>
+      <li>Paste the text above</li>
+      <li>Add an image: screenshot of the GitHub repo or a simple diagram of the 7 skills — images get 2–3× more reach</li>
+      <li>Do NOT use LinkedIn's "Schedule" feature if you want maximum reach — post manually at peak time</li>
+    </ol>
+  </div>
+
+  <!-- 6. OTHER DIRECTORIES -->
+  <div class="platform">
+    <div class="platform-header">
+      <span class="badge badge-optional">Optional</span>
+      <h2>6. Other High-ROI Directories</h2>
+    </div>
+    <p>Lower effort, incremental traffic. Do these after the main platforms above.</p>
+    <ol>
+      <li>
+        <strong>awesome-claude.ai</strong> —
+        <a href="https://awesomeclaude.ai" target="_blank">awesomeclaude.ai</a> —
+        separate from awesomeskill.ai. Check if they have a submit form.
+      </li>
+      <li>
+        <strong>GitHub topic pages</strong> — your repo already has 7 topics. People browsing
+        <a href="https://github.com/topics/claude-code" target="_blank">github.com/topics/claude-code</a> will find it automatically.
+      </li>
+      <li>
+        <strong>Hacker News — Show HN</strong> —
+        <a href="https://news.ycombinator.com/submit" target="_blank">news.ycombinator.com/submit</a> —
+        Title: <em>"Show HN: 7 interconnected Claude Code skills as an open-source kit"</em>.
+        High risk/reward — post on a weekday morning US time (9am EST).
+      </li>
+      <li>
+        <strong>dev.to article</strong> —
+        <a href="https://dev.to/new" target="_blank">dev.to/new</a> —
+        Write a short "how I built it" post (500 words). Links back to GitHub. Good for long-tail Google traffic.
+      </li>
+      <li>
+        <strong>Claude Discord</strong> — if you're in any Claude/Anthropic Discord servers, share in the #tools or #resources channel.
+      </li>
+    </ol>
+  </div>
+
+  <hr class="divider">
+  <div style="color: #8b949e; font-size: 0.8rem; text-align: center; padding-bottom: 20px;">
+    Personal reference — do not publish. Repo: github.com/Abed-Zahed/claude-skills-kit
+  </div>
+
+</div>
+</body>
+</html>

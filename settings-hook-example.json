@@ -1,0 +1,17 @@
+{
+  "hooks": {
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "shell": "powershell",
+            "command": "$json = $input | Out-String | ConvertFrom-Json; $msg = [string]$json.user_message; $first = if ($msg.Length -gt 0) { $msg[0] } else { '' }; if ($first -eq '*' -or $first -eq '#' -or $msg -match '^/') { exit 0 }; $words = ($msg.Trim() -split '\\s+').Count; if ($words -gt 15) { exit 0 }; Write-Output '{\"hookSpecificOutput\":{\"hookEventName\":\"UserPromptSubmit\",\"additionalContext\":\"Short or vague prompt detected. If unclear, use /polish-prompt to refine before executing.\"}}'",
+            "timeout": 5,
+            "statusMessage": "Checking prompt clarity..."
+          }
+        ]
+      }
+    ]
+  }
+}

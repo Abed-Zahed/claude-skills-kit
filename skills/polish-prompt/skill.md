@@ -95,7 +95,7 @@ Flag each issue found:
 ### Step 5 — Auto-execute decision
 
 - **Single prompt**: print `Settings: [model] / [effort] / thinking [on|off]` (from Step 4), then print `Executing: [one-sentence summary]`, then execute inline. User sees settings + summary + result, not the full polished prompt.
-- **Multiple prompts (scope creep)**: stop. Print numbered list. Let user send each separately.
+- **Multiple prompts (scope creep)**: stop, do not execute anything. This holds even if the tasks feel small, related, or there are only two or three. Do not rationalize past it, "I'll just run them in one pass" is exactly the failure mode this step exists to block. Print the numbered list, one `Settings:` line per item (from Step 4, not optional), let the user send each separately.
 - **Skill-routed**: invoke the skill directly using the Skill tool.
 
 ### Step 6 — Output format (multiple prompts only)
@@ -106,7 +106,9 @@ Flag each issue found:
 
 ## Split into N prompts — send each separately:
 1. [first clean prompt]
+   Settings: [model] / [effort] / thinking [on|off]
 2. [second clean prompt]
+   Settings: [model] / [effort] / thinking [on|off]
 ```
 
 ---

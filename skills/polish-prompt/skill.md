@@ -96,7 +96,7 @@ Flag each issue found:
 
 Delegable: a scoped code fix, research/log summarization, boilerplate, or first-draft task, not touching security-sensitive code, real PII, git/deploy actions, final accuracy-critical output, or architecture decisions. Not eligible, keep on Claude, no matter how small it looks.
 
-Tool-access gap (Exa, Firecrawl, other MCP tools Ollama can't reach): Claude always runs the tool itself. Delegate the post-fetch synthesis only when the fetched content is large (a crawl, a long doc, a bulk log) and the remaining work is mechanical drafting. Small fetches or judgment calls stay on Claude.
+Tool-access gap (any Claude Code-specific tool, skill, or hook Ollama can't reach: MCP tools like Exa/Firecrawl, Artifact, Workflow, skill invocations, hooks): Claude always runs it itself. Delegate the post-fetch synthesis only when the fetched content is large (a crawl, a long doc, a bulk log) and the remaining work is mechanical drafting. Small fetches or judgment calls stay on Claude.
 
 If delegable: draft one precise, fully-scoped prompt, run it via the best-fit Ollama Cloud model, review the result. Apply directly with small fixes made in-place, or re-delegate once with a sharper prompt if substantially wrong, then finish it directly rather than loop again. Testing and any git action always stay on Claude.
 

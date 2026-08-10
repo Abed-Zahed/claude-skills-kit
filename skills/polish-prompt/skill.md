@@ -92,13 +92,21 @@ Flag each issue found:
 - Quick lookup or explanation: sonnet, low
 - New feature (routes to /modern-engineer): opus, high, think
 
-### Step 5 — Auto-execute decision
+### Step 5 — Ollama Cloud delegation check
 
-- **Single prompt**: print `Settings: [model] / [effort] / thinking [on|off]` (from Step 4), then print `Executing: [one-sentence summary]`. If settings name the model the main agent is already running as, execute directly. If settings name a different model (opus, haiku, fable), dispatch a real subagent on that exact model via the Agent tool's `model` parameter, the main agent approximating that tier itself is not a substitute. Encode effort/thinking into the subagent's task prompt (no separate parameter for it exists). User sees settings + summary + result, not the full polished prompt, not the dispatch mechanics.
+Delegable: a scoped code fix, research/log summarization, boilerplate, or first-draft task, not touching security-sensitive code, real PII, git/deploy actions, final accuracy-critical output, or architecture decisions. Not eligible, keep on Claude, no matter how small it looks.
+
+Tool-access gap (Exa, Firecrawl, other MCP tools Ollama can't reach): Claude always runs the tool itself. Delegate the post-fetch synthesis only when the fetched content is large (a crawl, a long doc, a bulk log) and the remaining work is mechanical drafting. Small fetches or judgment calls stay on Claude.
+
+If delegable: draft one precise, fully-scoped prompt, run it via the best-fit Ollama Cloud model, review the result. Apply directly with small fixes made in-place, or re-delegate once with a sharper prompt if substantially wrong, then finish it directly rather than loop again. Testing and any git action always stay on Claude.
+
+### Step 6 — Auto-execute decision
+
+- **Single prompt**: print `Settings: [model] / [effort] / thinking [on|off]` (from Step 4), then print `Executing: [one-sentence summary]`. If settings name the model the main agent is already running as, execute directly. If settings name a different model (opus, haiku, fable), dispatch a real subagent on that exact model via the Agent tool's `model` parameter, the main agent approximating that tier itself is not a substitute. Encode effort/thinking into the subagent's task prompt (no separate parameter for it exists). If Step 5 found the task delegable, run its delegation loop instead of drafting directly. After the result, print `Delegation: ~X% (reason)`; at 0%, name the specific reason (security-sensitive, PII, git action, architecture judgment, tool-gap with a small/judgment remainder, or too small to be worth delegating). User sees settings + summary + result + delegation line, not the full polished prompt, not the dispatch mechanics.
 - **Multiple prompts (scope creep)**: stop, do not execute anything. This holds even if the tasks feel small, related, or there are only two or three. Do not rationalize past it, "I'll just run them in one pass" is exactly the failure mode this step exists to block. Print the numbered list, one `Settings:` line per item (from Step 4, not optional), let the user send each separately.
 - **Skill-routed**: invoke the skill directly using the Skill tool.
 
-### Step 6 — Output format (multiple prompts only)
+### Step 7 — Output format (multiple prompts only)
 
 ```
 ## Issues found

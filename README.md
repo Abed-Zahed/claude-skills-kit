@@ -1,6 +1,10 @@
 # Claude Skills Kit
 
-A set of 7 interconnected Claude Code skills that form a complete engineering, research, and decision-making workflow. Each skill is useful on its own. Together they form a system.
+A set of 8 Claude Code skills covering engineering, research, and
+decision-making workflows. Each skill is useful on its own. Seven of them
+are zero-config and portable, the eighth (`/video-review`) is included as a
+worked example of a more involved, personal-infrastructure-dependent skill,
+see its own note below before expecting it to run as-is.
 
 ## Skills included
 
@@ -13,6 +17,7 @@ A set of 7 interconnected Claude Code skills that form a complete engineering, r
 | `/improve-system` | 5-mode process review: audit, skill-review, experience, historical-review, foundation. |
 | `/ask-the-board` | Advisory board simulator. Recommend 2 expert advisors for any context, then consult them on decisions in their own voice. |
 | `/internal-focus-group` | Multi-agent panel of real people (built from ingested notes). Each person responds in character. Results synthesized into one report. |
+| `/video-review` | Batch-reviews social video links against per-link instructions: fetch/transcribe, verify, conditional ticket, one consolidated report. **Personal, not zero-config**, see [`skills/video-review/README.md`](skills/video-review/README.md) for the three hardcoded dependencies and how to adapt them. |
 
 ## The linchpin: /polish-prompt
 
@@ -62,6 +67,10 @@ Add the hook from `settings-hook-example.json` to your `~/.claude/settings.json`
 - Claude Code (any version)
 - `/web-scraping` requires Exa and Firecrawl MCP tools configured
 - `/internal-focus-group` requires member profiles saved via `/ingest-resource`
+- `/video-review` requires the personal infrastructure described in
+  [`skills/video-review/README.md`](skills/video-review/README.md) (an
+  Ollama Cloud batch-delegation setup, a video transcription tool, and an
+  issue tracker integration), none of which is included in this kit
 
 ## Attribution
 

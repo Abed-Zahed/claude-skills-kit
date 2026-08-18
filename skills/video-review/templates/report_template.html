@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Video Review Batch - {{REPORT_DATE}}</title>
+<style>
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background-color: #f4f6f8;
+    color: #333;
+    margin: 0;
+    padding: 20px;
+    line-height: 1.6;
+  }
+  .container {
+    max-width: 800px;
+    margin: 0 auto;
+  }
+  header {
+    background: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    margin-bottom: 20px;
+  }
+  header h1 {
+    margin: 0 0 10px 0;
+    font-size: 24px;
+  }
+  header p {
+    margin: 0;
+    color: #666;
+  }
+  .card {
+    background: #fff;
+    border: 1px solid #e1e4e8;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    padding: 20px;
+    margin-bottom: 20px;
+  }
+  .card h3 {
+    margin-top: 0;
+    word-break: break-all;
+  }
+  .card h3 a {
+    color: #0366d6;
+    text-decoration: none;
+  }
+  .card h3 a:hover {
+    text-decoration: underline;
+  }
+  .card p {
+    margin: 8px 0;
+  }
+  .badge {
+    display: inline-block;
+    padding: 4px 8px;
+    border-radius: 4px;
+    color: #fff;
+    font-size: 0.85em;
+    font-weight: bold;
+    text-transform: capitalize;
+  }
+  .verified-true {
+    background-color: #28a745;
+  }
+  .verified-false {
+    background-color: #dc3545;
+  }
+  .unverifiable {
+    background-color: #6c757d;
+  }
+  .screenshot-container img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 4px;
+    margin-top: 10px;
+    border: 1px solid #eee;
+  }
+  .ticket-container a {
+    display: inline-block;
+    margin-top: 10px;
+    color: #0366d6;
+    text-decoration: none;
+  }
+  .ticket-container a:hover {
+    text-decoration: underline;
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <header>
+    <h1>Video Review Batch Report</h1>
+    <p>Date: {{REPORT_DATE}} | Total Links: {{LINK_COUNT}}</p>
+  </header>
+  <main>
+<!-- LINK_CARD_START -->
+    <div class="card">
+      <h3><a href="{{LINK_URL}}" target="_blank">{{LINK_URL}}</a></h3>
+      <p><strong>Instruction:</strong> {{LINK_INSTRUCTION}}</p>
+      <p><strong>Fetch Method:</strong> {{FETCH_METHOD}}</p>
+      <p><strong>Verdict Summary:</strong> {{VERDICT_SUMMARY}}</p>
+      <p><strong>Claim Status:</strong> <span class="badge {{CLAIM_STATUS}}">{{CLAIM_STATUS}}</span></p>
+      <div class="screenshot-container">{{SCREENSHOT_HTML}}</div>
+      <div class="ticket-container">{{TICKET_HTML}}</div>
+    </div>
+<!-- LINK_CARD_END -->
+  </main>
+</div>
+</body>
+</html>

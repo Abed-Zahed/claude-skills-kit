@@ -51,7 +51,7 @@ If yt-dlp is missing, the skill uses WebFetch page text and metadata. If Whisper
 
 ## Optional Ollama Cloud add-on
 
-If `~/.claude/CLAUDE.md` contains an "Ollama Cloud delegation" section, the skill loads `ollama_addon.md` and sends per-link fetch and first-pass summary work to Track A. The model choice comes from the delegation table in `~/.claude/CLAUDE.md`, not from this skill. The add-on uses `scripts/dispatch_ollama_task.py` and `scripts/check_watcher.ps1`. Set `TRACK_A_DIR` to the Track A dropfolder. Set `TRACK_A_TASK_NAME` if your watcher task name differs from the default.
+If `~/.claude/CLAUDE.md` contains an "Ollama Cloud delegation" section, the skill loads `ollama_addon.md` and sends per-link fetch and first-pass summary work to Track A. The model choice comes from the delegation table in `~/.claude/CLAUDE.md`, not from this skill. The add-on uses `<TRACK_A_HOME>/dispatch_ollama_task.py` and `<TRACK_A_HOME>/check_watcher.ps1`, the shared helpers in `ollama-addon/track-a/`. Set `TRACK_A_DIR` to the Track A dropfolder. Set `TRACK_A_TASK_NAME` if your watcher task name differs from the default.
 
 ## Ticket creation
 

@@ -19,7 +19,7 @@ If mode is unclear from context, ask: *"Which mode? audit / skill-review / exper
 ## Mode: audit
 Find stale, conflicting, or duplicate notes.
 
-1. Scan `C:\Users\Administrator\.claude\projects\d--Job-hunter\memory\` for:
+1. Scan `~/.claude/projects/<project>/memory/` for:
    - Duplicate topics across files
    - Contradictions between files
    - Notes older than 30 days with time-sensitive claims (dates, job statuses)
@@ -71,11 +71,11 @@ Mine recent Claude Code sessions for missed learnings.
 Fill in missing foundational content for a project or identity.
 
 Check for and fill in missing entries across these pillars:
-- **Brand voice** — how the user writes and speaks
-- **Target audience** — who they're talking to
-- **Offers/products** — what they're selling or building
-- **Core processes** — how they do their key workflows
-- **Key people** — team, advisors, frequent collaborators
+- **Brand voice**, how the user writes and speaks
+- **Target audience**, who they're talking to
+- **Offers/products**, what they're selling or building
+- **Core processes**, how they do their key workflows
+- **Key people**, team, advisors, frequent collaborators
 
 For each missing item: ask 3-5 targeted questions, save answers to `knowledge/foundation/`.
 This content feeds `/ask-the-board` and `/internal-focus-group`.

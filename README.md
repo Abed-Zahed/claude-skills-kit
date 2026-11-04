@@ -1,72 +1,70 @@
 # Claude Skills Kit
 
-A set of 7 interconnected Claude Code skills that form a complete engineering, research, and decision-making workflow. Each skill is useful on its own. Together they form a system.
+Claude Code skills for engineering, research, job applications and decision making. Every skill works on stock Claude Code. Skills that can hand work to cheaper Ollama Cloud models ship that behaviour as a separate add-on file that loads only when you set it up.
 
-## Skills included
+## Layout
 
-| Skill | What it does |
+| Folder | What is in it |
 |---|---|
-| `/polish-prompt` | Rewrites vague prompts into specific, actionable requests. Routes to the right skill automatically. Auto-executes if single clean output. |
-| `/modern-engineer` | 5-phase engineering workflow: brainstorm → plan → work → review → debug. Never skips to code without interviewing first. |
-| `/web-scraping` | Semantic search (Exa) and JS-heavy page scraping (Firecrawl). Use for any research or URL fetch task. |
-| `/ingest-resource` | Saves articles, links, PDFs, transcripts, and notes into structured knowledge/ or projects/ folders. |
-| `/improve-system` | 5-mode process review: audit, skill-review, experience, historical-review, foundation. |
-| `/ask-the-board` | Advisory board simulator. Recommend 2 expert advisors for any context, then consult them on decisions in their own voice. |
-| `/internal-focus-group` | Multi-agent panel of real people (built from ingested notes). Each person responds in character. Results synthesized into one report. |
+| `created/` | Skills written for this kit |
+| `collected/` | Skills by other authors, redistributed under their license, credited below |
+| `ollama-addon/` | Optional: the `CLAUDE.md` delegation section and the Track A drop-folder runner that the add-on files use |
 
-## The linchpin: /polish-prompt
+## Created skills
 
-`/polish-prompt` is the skill that ties the kit together. It:
-- Detects vague or scoped-out prompts before they reach the model
-- Routes to the right skill automatically (e.g. routes "build X" to `/modern-engineer`)
-- Auto-executes single clean prompts instead of showing them to you
-- Splits multi-task prompts and hands them back for sequential sending
+| Skill | What it does | Add-on |
+|---|---|---|
+| `/polish-prompt` | Rewrites a rough prompt into a specific one, splits bundled tasks, picks model and effort, routes to a matching skill | `ollama_routing.md` |
+| `/modern-engineer` | 5-phase build workflow: brainstorm, plan, work, review, debug. Interviews before coding | |
+| `/web-scraping` | Research router: cache first, free tools first, paid MCP (Model Context Protocol) tools only when needed | optional Firecrawl budget hook |
+| `/tailor-jd` | Tailors your master CV to one or more JDs (job descriptions) with a fit score, ATS (Applicant Tracking System) coverage and an honesty audit | `ollama_addon.md` |
+| `/video-review` | Batch-reviews social video links against per-link instructions, one consolidated report | `ollama_addon.md` |
+| `/task-status` | Shows which subagent dispatches are pending or finished, from a local log. Zero API cost | logging hook (required) |
+| `/ask-the-board` | Recommends two expert advisors for a context, then gives each one's take on a decision | |
+| `/internal-focus-group` | Panel of real people, built from notes you saved, each answering in their own voice | |
+| `/ingest-resource` | Files articles, links, PDFs and transcripts into `knowledge/` or `projects/` with a summary block | |
+| `/improve-system` | Reviews memory, skills and process in 5 modes: audit, skill-review, experience, historical-review, foundation | |
 
-A `UserPromptSubmit` hook is also included to nudge you on short/vague prompts without breaking flow.
+## Collected skills
 
-## Installation
+| Skill | Author | License |
+|---|---|---|
+| `/task-observer` | Eoghan Henn, [rebelytics.com](https://rebelytics.com), source [rebelytics/one-skill-to-rule-them-all](https://github.com/rebelytics/one-skill-to-rule-them-all) | CC BY 4.0 (Creative Commons Attribution) |
 
-### Option A — Install all skills at once
+The `/polish-prompt` nudge hook in `settings-hook-example.json` is inspired by [claude-code-prompt-improver](https://github.com/severity1/claude-code-prompt-improver) (MIT License).
 
-Copy the `skills/` folder into your Claude Code skills directory:
+## Install
+
+Copy one skill folder, or all of them, into your skills directory:
 
 ```bash
 # macOS / Linux
-cp -r skills/* ~/.claude/skills/
+cp -r created/polish-prompt ~/.claude/skills/
 
 # Windows (PowerShell)
-Copy-Item -Recurse skills\* "$env:USERPROFILE\.claude\skills\"
+Copy-Item -Recurse created\polish-prompt "$env:USERPROFILE\.claude\skills\"
 ```
 
-### Option B — Install one skill
+Skills with hooks or setup steps have their own `README.md` in the skill folder.
 
-Copy the individual skill folder:
+Optional `/polish-prompt` nudge: merge `settings-hook-example.json` into `~/.claude/settings.json`. Start a prompt with `*` (already specific) or `#` (debugging, keep raw) to skip it.
 
-```bash
-cp -r skills/polish-prompt ~/.claude/skills/
-```
+## Ollama add-on (optional)
 
-### Option C — Install the UserPromptSubmit hook (optional, recommended)
+Lets the skills route mechanical pieces of a task (drafts, research summaries, boilerplate) to Ollama Cloud models and keep judgment, tests and git on Claude.
 
-Add the hook from `settings-hook-example.json` to your `~/.claude/settings.json`. It fires on every prompt and injects a nudge when your prompt is short or vague. Bypass it with `*` or `#` as the first character.
+1. Paste `ollama-addon/CLAUDE_SECTION.md` into `~/.claude/CLAUDE.md` and edit the model roster.
+2. For headless background work, set up Track A: [ollama-addon/README.md](ollama-addon/README.md).
 
-## Bypass prefixes (polish-prompt + hook)
-
-| Prefix | Effect |
-|---|---|
-| `*` | Skip polishing — prompt is already specific |
-| `#` | Skip — debugging session, preserve raw prompt |
+Without that section in `CLAUDE.md`, every skill runs on Claude only and never mentions Ollama.
 
 ## Requirements
 
-- Claude Code (any version)
-- `/web-scraping` requires Exa and Firecrawl MCP tools configured
-- `/internal-focus-group` requires member profiles saved via `/ingest-resource`
-
-## Attribution
-
-Hook architecture inspired by [claude-code-prompt-improver](https://github.com/severity1/claude-code-prompt-improver) (MIT License).
+- Claude Code.
+- `/web-scraping`: works with built-in WebSearch and WebFetch; Exa, Gemini and Firecrawl MCP servers are optional.
+- `/internal-focus-group`: member profiles saved with `/ingest-resource`.
+- Track A and the hooks: Windows PowerShell 5.1 or newer.
 
 ## License
 
-MIT
+MIT for `created/` and `ollama-addon/`. Collected skills keep their own license.

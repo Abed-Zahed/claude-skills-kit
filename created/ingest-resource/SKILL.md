@@ -26,8 +26,8 @@ Ask if the classification is unclear.
 
 ## Steps
 
-1. **Fetch content** — use `/web-scraping` if a URL; read if a file; accept if pasted
-2. **Classify** — knowledge/ or projects/? (see table above)
+1. **Fetch content**, use `/web-scraping` if a URL; read if a file; accept if pasted
+2. **Classify**, knowledge/ or projects/? (see table above)
 3. **Generate the summary block** and place it at the very top of the file:
 
 ```markdown
@@ -44,13 +44,13 @@ related: [[concept-1]], [[person-1]], [[project-1]]
 ```
 
 4. **Add [[wikilinks]]** on first mention of any person, concept, or project that has an existing note
-5. **Create folder** if it doesn't exist (no error — just create it)
+5. **Create folder** if it doesn't exist (no error, just create it)
 6. **Save** to the correct path:
-   - `C:\Users\Administrator\.claude\knowledge\<topic>\<YYYY-MM-DD-title>.md`
-   - `C:\Users\Administrator\.claude\projects\<project-name>\<YYYY-MM-DD-title>.md`
+   - `~/.claude/knowledge/<topic>/<YYYY-MM-DD-title>.md`
+   - `~/.claude/projects/<project-name>/<YYYY-MM-DD-title>.md`
 
 ## Naming conventions
-- Folder: kebab-case topic (`rf-engineering`, `job-hunting`, `azure-chocolates`, `fitness`)
+- Folder: kebab-case topic (`rf-engineering`, `job-hunting`, `side-business`, `fitness`)
 - File: date-prefixed kebab-case (`2026-06-18-exa-ai-overview.md`)
 
 ## After saving

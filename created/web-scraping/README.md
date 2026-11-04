@@ -4,7 +4,7 @@ A Claude Code skill that sends every research fetch through a free-first ladder,
 
 ## What it does
 
-- Checks `~/.claude/research_cache/<sha256(url)[0:16]>/` before any fetch, so the same URL is never paid for twice. SHA-256 (Secure Hash Algorithm, 256 bit) gives the cache key.
+- Checks `$RESEARCH_HOME/<sha256(url)[0:16]>/` before any fetch, where `RESEARCH_HOME` defaults to `~/research_cache`, so the same URL is never paid for twice. SHA-256 (Secure Hash Algorithm, 256 bit) gives the cache key.
 - Routes discovery to WebSearch, ordinary pages to WebFetch, and PDF (Portable Document Format) files to `curl` plus pypdf, at zero cost.
 - Uses Exa for semantic discovery, Gemini under daily caps, and Firecrawl only for JS-rendered (JavaScript) or bot-blocked pages, site maps, and budgeted interactive sessions.
 - Never sends a PDF or document URL to Firecrawl, which bills per PDF page.
@@ -25,14 +25,14 @@ This hook is Windows only and runs under Windows PowerShell. Skip it on other pl
 2. Merge `hooks/settings-snippet.json` into `%USERPROFILE%\.claude\settings.json`. Keep any existing `hooks` entries and add this `PreToolUse` entry to the array. The file is JSON (JavaScript Object Notation).
 3. Start a new Claude Code session. Hooks are read at session start.
 
-State and log files are created on first use, next to the settings file:
+State and log files are created on first use under `%USERPROFILE%\research_cache\_budget\` by default (or `$env:RESEARCH_HOME\_budget\` when `RESEARCH_HOME` is set), not next to the settings file. The default paths are:
 
-- `%USERPROFILE%\.claude\research_budget_state.json`, the budget ledger.
-- `%USERPROFILE%\.claude\research_tool_log.jsonl`, one JSON line per gated call, appended.
+- `%USERPROFILE%\research_cache\_budget\research_budget_state.json`, the budget ledger.
+- `%USERPROFILE%\research_cache\_budget\research_tool_log.jsonl`, one JSON line per gated call, appended.
 
 ## How the budget gate decides
 
-The hook runs before a tool call, reads the tool name and its input from standard input, and answers allow (no output) or deny (a JSON decision with a reason). It ignores any tool that is not `mcp__firecrawl__*` or `mcp__gemini__*`.
+The hook runs before a tool call, reads the tool name and its input from standard input, and answers allow (no output) or deny (a JSON decision with a reason). It ignores any tool that does not match `mcp__(firecrawl|claude_ai_Firecrawl|gemini)__.*`. Both Firecrawl tool prefixes, the MCP server (`mcp__firecrawl__*`) and the claude.ai connector (`mcp__claude_ai_Firecrawl__*`), are gated.
 
 1. Hard denies that need no state:
    - `pdfOptions` is set or a `pdf` parser is requested, because the cost cannot be sized before the call.
@@ -58,4 +58,4 @@ The hook fails open on any internal error or lock timeout, so research is never 
 - Grants: a job may request extra credits up to 3 times, 25 each. Edit `grants` for that session key in the state file by hand, after writing a justification line to the log. The script caps the usable count at 3.
 - Gemini caps: edit `gemini_caps` in the state file, for example raise `deep-research` from 2 to 4.
 - Reset: delete the state file. It is recreated on the next gated call.
-- Log rotation: the log is rotated to a single `.old` file when it passes 2 MB.
+- Log rotation: the log is rotated to a single `.old` file when it passes 2 megabytes (MB).

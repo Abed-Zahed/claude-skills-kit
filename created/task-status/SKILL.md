@@ -27,10 +27,10 @@ The skill itself only reads the log. It needs no model call, network call, MCP s
 
 ## How to run
 
-Run the reader script and relay its output to the user:
+Run the reader script and relay its output to the user. The command runs through Git Bash, so the script path uses `$USERPROFILE` and forward slashes:
 
 ```
-powershell -NoProfile -ExecutionPolicy Bypass -File "$env:USERPROFILE\.claude\skills\task-status\read_agent_log.ps1"
+powershell -NoProfile -ExecutionPolicy Bypass -File "$USERPROFILE/.claude/skills/task-status/read_agent_log.ps1"
 ```
 
 Options:
@@ -42,7 +42,7 @@ Options:
 Example (only the current session, full history):
 
 ```
-powershell -NoProfile -ExecutionPolicy Bypass -File "$env:USERPROFILE\.claude\skills\task-status\read_agent_log.ps1" -All -Session <session-id>
+powershell -NoProfile -ExecutionPolicy Bypass -File "$USERPROFILE/.claude/skills/task-status/read_agent_log.ps1" -All -Session <session-id>
 ```
 
 ## Limits

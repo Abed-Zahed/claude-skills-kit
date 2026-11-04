@@ -1,4 +1,5 @@
 ---
+name: internal-focus-group
 description: Multi-agent focus group with real people as parallel agents. Each person has their own voice, lens, and history from ingested notes. Call one person or the whole panel. Results synthesized into one report.
 ---
 
@@ -6,7 +7,7 @@ description: Multi-agent focus group with real people as parallel agents. Each p
 
 ## Setup
 Each focus group member lives in their own folder:
-`~/.claude/focus-group/{name}\`
+`~/.claude/focus-group/{name}/`
 
 Files in that folder define their voice, background, opinions, and known content.
 

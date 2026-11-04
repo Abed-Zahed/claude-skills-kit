@@ -9,11 +9,12 @@ Free first, cache first, paid last. If a tool is not installed, skip that rung s
 
 ## Cache first
 
-Before any fetch, look for `~/.claude/research_cache/<sha256(url)[0:16]>/`. If `text.txt` is there and fresh, read it and cite it. Never re-fetch a cached URL. Freshness by kind: standards and papers 180 days, ordinary pages 14 days, news or dated paths 3 days.
+Before any fetch, look for `$RESEARCH_HOME/<sha256(url)[0:16]>/` (default `$HOME/research_cache/<sha256(url)[0:16]>/`). If `text.txt` is there and fresh, read it and cite it. Never re-fetch a cached URL. Freshness by kind: standards and papers 180 days, ordinary pages 14 days, news or dated paths 3 days.
 
 ```bash
+RESEARCH_HOME="${RESEARCH_HOME:-$HOME/research_cache}"
 H=$(printf '%s' "$URL" | sha256sum | cut -c1-16)
-D="$HOME/.claude/research_cache/$H"; mkdir -p "$D"
+D="$RESEARCH_HOME/$H"; mkdir -p "$D"
 printf '%s\n' "$URL" > "$D/url.txt"
 ```
 
@@ -36,13 +37,14 @@ Zero cost, and it produced text comparable to a paid scrape in one test on a lon
 
 ```bash
 [ -f "$D/doc.pdf" ] || curl -sL --max-time 120 -A "Mozilla/5.0" -o "$D/doc.pdf" "$URL"
+command -v cygpath >/dev/null && D=$(cygpath -m "$D")
 python -c "
-import pypdf
-r = pypdf.PdfReader(r'$D/doc.pdf')
-with open(r'$D/text.txt', 'w', encoding='utf-8') as f:
+import sys, pypdf
+r = pypdf.PdfReader(sys.argv[1])
+with open(sys.argv[2], 'w', encoding='utf-8') as f:
     for i, p in enumerate(r.pages, 1):
         f.write(f'\n===== PAGE {i} =====\n' + (p.extract_text() or ''))
-print(len(r.pages), 'pages')"
+print(len(r.pages), 'pages')" "$D/doc.pdf" "$D/text.txt"
 grep -n -i -C3 "keyword" "$D/text.txt" | head -60
 ```
 
@@ -50,7 +52,7 @@ If curl returns HTML or a 403, call `WebFetch` on the URL, then `web_fetch_exa`.
 
 ## Budget gate
 
-A PreToolUse hook may be installed at `~/.claude/hooks/firecrawl_budget_gate.ps1`. When it denies a call, take the free route named in the message. Do not look for a workaround and do not edit the budget state file.
+A PreToolUse hook may be installed at `~/.claude/hooks/firecrawl_budget_gate.ps1`. When it denies a call, take the free route named in the message. Do not look for a workaround and do not edit the budget state file under `$RESEARCH_HOME/_budget` (default `$HOME/research_cache/_budget`).
 
 ## Tools
 

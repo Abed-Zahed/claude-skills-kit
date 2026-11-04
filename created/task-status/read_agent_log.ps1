@@ -6,8 +6,10 @@
 #   $env:USERPROFILE\.claude\agent_task_log.jsonl
 #
 # Correlation: a dispatch is a PreToolUse "dispatched" line. Its agent_id is
-# only known from the following PostToolUse line (same session, same
-# description). A SubagentStop line with that agent_id means it finished.
+# only known from a later PostToolUse line with the same description. Starts
+# and finishes are paired in timestamp order: each start line is matched to at
+# most one later finish line, preferring an exact agent_id match, then the
+# earliest unconsumed finish with the same description.
 #
 # Usage:
 #   powershell -File read_agent_log.ps1                 # last 24 hours, all sessions
@@ -59,29 +61,79 @@ if (-not $sel -or @($sel).Count -eq 0) {
     exit 0
 }
 
-# Finished agent ids (from SubagentStop and completed PostToolUse).
-$finished = @{}
+# Order events by timestamp, keeping file order for equal timestamps.
+$ordered = @()
+$i = 0
 foreach ($r in $sel) {
-    if ($r.event -eq 'SubagentStop' -and $r.agent_id) { $finished[$r.agent_id] = $r }
-    if ($r.event -eq 'PostToolUse' -and $r.status -eq 'completed' -and $r.agent_id) {
-        if (-not $finished.ContainsKey($r.agent_id)) { $finished[$r.agent_id] = $r }
-    }
+    $t = [datetime]::MinValue
+    if (-not [datetime]::TryParse($r.ts, [ref]$t)) { $t = [datetime]::MinValue }
+    $ordered += [pscustomobject]@{ Ts = $t.ToUniversalTime(); Pos = $i; Row = $r }
+    $i++
 }
-# Map description to agent_id learned from PostToolUse (to link dispatch lines).
-$descToId = @{}
-foreach ($r in $sel) {
-    if ($r.event -eq 'PostToolUse' -and $r.agent_id -and $r.description) {
-        $descToId[$r.description] = $r.agent_id
+$ordered = @($ordered | Sort-Object Ts, Pos)
+for ($k = 0; $k -lt $ordered.Count; $k++) { $ordered[$k].Pos = $k }
+
+# Finish lines: SubagentStop events and completed PostToolUse events.
+$finishes = @()
+foreach ($e in $ordered) {
+    $r = $e.Row
+    $isStop = ($r.event -eq 'SubagentStop' -and $r.agent_id)
+    $isDone = ($r.event -eq 'PostToolUse' -and $r.status -eq 'completed' -and $r.agent_id)
+    if ($isStop -or $isDone) {
+        $finishes += [pscustomobject]@{
+            Pos = $e.Pos
+            AgentId = [string]$r.agent_id
+            Description = [string]$r.description
+            IsStop = [bool]$isStop
+            Row = $r
+            Consumed = $false
+        }
     }
 }
 
-$dispatches = @($sel | Where-Object { $_.event -eq 'PreToolUse' })
+$dispatches = @($ordered | Where-Object { $_.Row.event -eq 'PreToolUse' })
 $pending = @()
 $done = @()
+
 foreach ($d in $dispatches) {
-    $id = $descToId[$d.description]
-    if ($id -and $finished.ContainsKey($id)) { $done += ,@($d, $id) }
-    else { $pending += ,@($d, $id) }
+    $dr = $d.Row
+    $desc = [string]$dr.description
+
+    # agent_id learned from a later PostToolUse line with the same description.
+    $exactId = $null
+    foreach ($e in $ordered) {
+        if ($e.Pos -le $d.Pos) { continue }
+        $r = $e.Row
+        if ($r.event -eq 'PostToolUse' -and $r.agent_id -and ([string]$r.description) -eq $desc) {
+            $exactId = [string]$r.agent_id
+            break
+        }
+    }
+
+    $match = $null
+
+    # Exact agent_id match, later than this dispatch and not yet consumed.
+    if ($exactId) {
+        $exact = @($finishes | Where-Object { -not $_.Consumed -and $_.Pos -gt $d.Pos -and $_.AgentId -eq $exactId })
+        $stops = @($exact | Where-Object { $_.IsStop })
+        if ($stops.Count -gt 0) { $match = $stops[0] }
+        elseif ($exact.Count -gt 0) { $match = $exact[0] }
+    }
+
+    # Otherwise the earliest unconsumed finish with the same description.
+    if (-not $match -and $desc) {
+        $match = @($finishes | Where-Object { -not $_.Consumed -and $_.Pos -gt $d.Pos -and $_.Description -eq $desc })[0]
+    }
+
+    if ($match) {
+        $match.Consumed = $true
+        $done += ,@($dr, $match)
+    }
+    else {
+        # An id already paired with an earlier dispatch is not this one's.
+        if ($exactId -and @($finishes | Where-Object { $_.Consumed -and $_.AgentId -eq $exactId }).Count -gt 0) { $exactId = $null }
+        $pending += ,@($dr, $exactId)
+    }
 }
 
 Write-Output "=== Agent-tool dispatch status ==="
@@ -105,10 +157,9 @@ if ($pending.Count -gt 0) {
 if ($done.Count -gt 0) {
     Write-Output "--- RECENTLY FINISHED ---"
     foreach ($p in $done) {
-        $d = $p[0]; $id = $p[1]
-        $f = $finished[$id]
-        Write-Output "  [$($d.ts)] $($d.description)   -> finished [$($f.ts)]"
-        if ($f.last_message) { Write-Output "      result: $($f.last_message)" }
+        $d = $p[0]; $f = $p[1]
+        Write-Output "  [$($d.ts)] $($d.description)   -> finished [$($f.Row.ts)]"
+        if ($f.Row.last_message) { Write-Output "      result: $($f.Row.last_message)" }
     }
     Write-Output ""
 }

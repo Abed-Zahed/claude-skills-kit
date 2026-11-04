@@ -4,17 +4,19 @@
 # and per-day Firecrawl credit budget, and enforces Gemini per-tool daily caps.
 # Fails OPEN on any internal error (research must not brick) but logs the error.
 #
-# State and log live under the user profile, never inside a project folder.
+# Research cache, state and log live under RESEARCH_HOME (default: the user profile's
+# research_cache), never inside ~/.claude or a project folder.
 # Test overrides: RESEARCH_STATE_PATH, RESEARCH_LOG_PATH.
 # Budget identity: RESEARCH_BUDGET_KEY (set by a dispatcher so retries and verifier
 # passes share a parent's budget), else session_id.
 # RESEARCH_BASE overrides the base allowance (default 60 interactive, 25 scoped).
 
 $ErrorActionPreference = 'Stop'
-$ClaudeDir = Join-Path $env:USERPROFILE '.claude'
-$StatePath = if ($env:RESEARCH_STATE_PATH) { $env:RESEARCH_STATE_PATH } else { Join-Path $ClaudeDir 'research_budget_state.json' }
-$LogPath   = if ($env:RESEARCH_LOG_PATH)   { $env:RESEARCH_LOG_PATH }   else { Join-Path $ClaudeDir 'research_tool_log.jsonl' }
-$CacheDir  = Join-Path $ClaudeDir 'research_cache'
+$ResearchHome = if ($env:RESEARCH_HOME) { $env:RESEARCH_HOME } else { Join-Path $env:USERPROFILE 'research_cache' }
+$BudgetDir = Join-Path $ResearchHome '_budget'
+$StatePath = if ($env:RESEARCH_STATE_PATH) { $env:RESEARCH_STATE_PATH } else { Join-Path $BudgetDir 'research_budget_state.json' }
+$LogPath   = if ($env:RESEARCH_LOG_PATH)   { $env:RESEARCH_LOG_PATH }   else { Join-Path $BudgetDir 'research_tool_log.jsonl' }
+$CacheDir  = $ResearchHome
 $DayCeiling = 400
 $SessionCeiling = 150
 $GrantSize = 25
@@ -62,7 +64,7 @@ try {
     $j = $raw | ConvertFrom-Json
     $toolName = [string]$j.tool_name
     $ti = $j.tool_input
-    $isFc = $toolName -like 'mcp__firecrawl__*'
+    $isFc = $toolName -match '^mcp__(firecrawl|claude_ai_Firecrawl)__'
     $isGem = $toolName -like 'mcp__gemini__*'
     if (-not ($isFc -or $isGem)) { exit 0 }
 
@@ -78,7 +80,7 @@ try {
     }
     $url = if ($urls.Count -gt 0) { $urls[0] } else { $null }
 
-    $fcName = $toolName -replace '^mcp__firecrawl__firecrawl_', ''
+    $fcName = $toolName -replace '^mcp__(firecrawl|claude_ai_Firecrawl)__firecrawl_', ''
     # 0. Pure-input denies, evaluated before any state or lock so they hold even if the mutex stalls.
     if ($isFc -and $ti -and ($ti.pdfOptions -or ($ti.parsers -and (@($ti.parsers) -contains 'pdf')))) {
         Write-Log @{ ts = (Get-Date).ToUniversalTime().ToString('o'); key = $key; tool = $toolName; url = $url; est = 0; decision = 'deny-pdf-options' }
@@ -155,7 +157,7 @@ try {
             }
         }
     } else {
-        $name = $toolName -replace '^mcp__firecrawl__firecrawl_', ''
+        $name = $toolName -replace '^mcp__(firecrawl|claude_ai_Firecrawl)__firecrawl_', ''
         if ($NoCharge -contains $name) { $est = 0 }
         elseif ($name -eq 'crawl') {
             if ($ti -and $ti.limit) { $est = [int]$ti.limit } else { $decision = 'deny-crawl-nolimit'; $reason = 'firecrawl_crawl without an explicit limit is refused (it bills 1 credit per page crawled). Pass a small limit, or use map to list URLs (1 credit) and scrape only the ones you need.' }

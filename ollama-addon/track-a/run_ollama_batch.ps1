@@ -30,18 +30,18 @@
 # ProcessStartInfo, JSON parse) with a trivial prompt against a cheap model
 # and MaxTurns 1, no side effects, cents of Ollama Cloud usage instead of a
 # real batch task:
-#   powershell -ExecutionPolicy Bypass -File run_ollama_batch.ps1 -SmokeTest
+#   powershell -ExecutionPolicy Bypass -File run_ollama_batch.ps1 -SmokeTest -Model <model>:cloud
 #
 # Usage:
 #   powershell -ExecutionPolicy Bypass -File run_ollama_batch.ps1 `
 #     -Prompt "Summarize what src/matcher.py does" `
 #     -WorkingDir "C:\path\to\your\repo" `
-#     -Model "glm-5.3-flash:cloud"
+#     -Model "<model-from-your-roster>:cloud"
 
 param(
     [string]$Prompt,
     [string]$WorkingDir = (Get-Location).Path,
-    [string]$Model = "glm-5.3-flash:cloud",
+    [string]$Model = $env:TRACK_A_DEFAULT_MODEL,
     [int]$MaxTurns = 25,
     [int]$TimeoutMinutes = 8,
     [string]$OutFile,
@@ -54,6 +54,10 @@ $ErrorActionPreference = "Stop"
 
 if (-not $SmokeTest -and -not $Prompt) {
     Write-Error "Pass -Prompt (the batch task text) or -SmokeTest."
+    exit 1
+}
+if (-not $SmokeTest -and -not $Model) {
+    Write-Error "Pass -Model <model>:cloud or set the TRACK_A_DEFAULT_MODEL env var."
     exit 1
 }
 
@@ -89,7 +93,7 @@ function Stop-ProcessTree {
     Stop-Process -Id $RootPid -Force -ErrorAction SilentlyContinue
 }
 
-# Append-only failure log, dashboard/server.py's /api/ollama-failures reads
+# Append-only failure log, a dashboard can read
 # this same file. There is no retry-then-rotate loop in this script (this
 # is a single-shot batch call, see the header comment), so RetryCount is
 # always 0 and FinalOutcome is always "failed" here, that is the honest
@@ -198,7 +202,7 @@ if ($Model -like 'deepseek*') {
 }
 if ($SmokeTest) {
     $effectivePrompt = "In one short sentence and nothing else, what model are you running as?"
-    $effectiveModel = "deepseek-v4.1-flash:cloud"
+    if (-not $effectiveModel) { Write-Error "-SmokeTest needs -Model <model>:cloud or the TRACK_A_DEFAULT_MODEL env var."; exit 1 }
     $effectiveTurnCap = 1
 }
 
@@ -239,12 +243,12 @@ if ($psi.EnvironmentVariables.ContainsKey('ANTHROPIC_API_KEY')) {
 }
 
 # Research budget identity for the PreToolUse hook firecrawl_budget_gate.ps1
-# (docs/research_tool_routing.md section 5): retries and verifiers of one parent job share a
+# (research budget keys): retries and verifiers of one parent job share a
 # single Firecrawl budget instead of each getting a fresh allowance.
 if ($BudgetKey) { $psi.EnvironmentVariables['RESEARCH_BUDGET_KEY'] = $BudgetKey }
 if ($BudgetBase -gt 0) { if ($BudgetBase -notin 25, 60) { $BudgetBase = 25 }; $psi.EnvironmentVariables['RESEARCH_BASE'] = [string]$BudgetBase }
 
-# Untested hypothesis fix for PROJECT_ISSUES.md issue 6 (long lines in
+# Untested hypothesis fix for a past issue (long lines in
 # delegated file writes coming back hard-wrapped mid-token, tail duplicated
 # as bare code). CreateNoWindow+redirected streams means stdout is not a
 # real TTY, but many Node CLIs (this one is Ink-based) still consult the

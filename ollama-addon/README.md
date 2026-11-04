@@ -1,8 +1,19 @@
 # Ollama add-on and Track A setup
 
-This add-on lets `/polish-prompt` use the Ollama Cloud delegation table in `~/.claude/CLAUDE.md`. The vanilla skill works without it. ## What Track A is
+This add-on lets `/polish-prompt` use the Ollama Cloud delegation table in `~/.claude/CLAUDE.md`. The vanilla skill works without it.
+
+## What Track A is
 
 Track A is a headless Claude Code process pointed at an Ollama Cloud model, fed by a drop folder. You write a small task file into `tasks/`. A watcher claims it and runs it. The result lands in `done/`. Up to three tasks can run at once.
+
+## Task file format
+
+- Line 1: working directory.
+- Line 2: model.
+- Optional `KEY=value` override lines: `TimeoutMinutes`, `MaxTurns`, `OutFile`, `BudgetKey`, `BudgetBase`.
+- Then the prompt.
+
+Write the file as `<slug>.txt.tmp` then rename it to `<slug>.txt` so the watcher never reads a half-written file. The watcher renames a claimed task to `<slug>.txt.inflight`; the result lands in `done/<slug>_done.txt`. Move results into `reviewed/` yourself after you check them. `OutFile` receives the run transcript, never point it at a report path.
 
 ## Prerequisites
 
@@ -21,19 +32,18 @@ Track A is a headless Claude Code process pointed at an Ollama Cloud model, fed 
 4. Set the environment variable `TRACK_A_DIR` to that drop folder path (used by the video-review scripts):
    `[Environment]::SetEnvironmentVariable('TRACK_A_DIR', "$env:USERPROFILE\track-a\ollama_dropfolder", 'User')`
 5. Optional: create `<TRACK_A_DIR>\max_parallel.txt` with `1`, `2` or `3`. This caps concurrent tasks. Default is 3.
-6. Open PowerShell in `<TRACK_A_HOME>` and run the smoke test:
-   `powershell -ExecutionPolicy Bypass -File .\run_ollama_batch.ps1 -SmokeTest`
+6. Open PowerShell in `<TRACK_A_HOME>` and run the smoke test with a model: `powershell -ExecutionPolicy Bypass -File .\run_ollama_batch.ps1 -SmokeTest -Model <model>:cloud`, or set the `TRACK_A_DEFAULT_MODEL` environment variable. Real runs need `-Model` or that environment variable too.
 7. Register the watcher once, in your own terminal, because it prompts for your Windows password (Task Scheduler stores it, the script does not):
    `powershell -ExecutionPolicy Bypass -File .\register_ollama_watcher_task.ps1`
 8. Start it now with `Start-ScheduledTask -TaskName ClaudeSkills_Ollama_DropfolderWatcher`, or log off and on.
 
 ## Safety
 
-The worker settings file `ollama_batch_permissions.json` uses JavaScript Object Notation (JSON). It denies `git commit`, `git push`, `git merge`, writes to `~/.claude`, and reads of `.env` files. Review every result in `done/` before applying it. The worker can still edit files in the working directory, so use a clean branch or a copy you can discard.
+The worker settings file `ollama_batch_permissions.json` uses JavaScript Object Notation (JSON). Its deny list covers both the Bash and PowerShell tools: `git commit`, `git push`, `git merge`, `gh pr create`, `gh pr merge`, `gh pr close`, `rm -rf`, secret reads, and any shell command naming a `.claude` path. It also denies Write and Edit under `~/.claude`. These denies are best-effort pattern matches, not a sandbox. Review every diff and run Track A on a branch or a disposable copy.
 
-## Turn caps
+## Turn caps and long tasks
 
-Default caps are 25 turns and 8 minutes, 60 turns and 20 minutes for deepseek models. Explicit `-MaxTurns` and `-TimeoutMinutes` win. Size them to the task: small edits need fewer turns, research or multi-file work needs more. Long tasks that will exceed the caps should use a handover instead.
+Default caps are 25 turns and 8 minutes. Deepseek models get 60 turns and 20 minutes. Explicit `-MaxTurns` and `-TimeoutMinutes` win. A task that will plausibly pass about 60 turns is split, or handed to a Cline handover instead. Cline is an open-source VS Code coding agent that can run on the same Ollama Cloud models in an interactive session; Claude writes the handover file, you run it.
 
 ## Check usage
 

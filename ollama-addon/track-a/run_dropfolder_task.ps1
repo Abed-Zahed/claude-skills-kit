@@ -49,7 +49,7 @@ try {
     if ($overrides.ContainsKey('TimeoutMinutes')) { $params.TimeoutMinutes = [int]$overrides['TimeoutMinutes'] }
     if ($overrides.ContainsKey('MaxTurns')) { $params.MaxTurns = [int]$overrides['MaxTurns'] }
     if ($overrides.ContainsKey('OutFile')) { $params.OutFile = $overrides['OutFile'] }
-    # Research budget identity (docs/research_tool_routing.md section 5). Default key is the
+    # Research budget identity (see the web-scraping budget gate). Default key is the
     # task name; a verifier or retry passes its parent's BudgetKey= to share one budget.
     $params.BudgetKey = if ($overrides.ContainsKey('BudgetKey')) { $overrides['BudgetKey'] } else { $baseName }
     if ($overrides.ContainsKey('BudgetBase')) { $params.BudgetBase = [int]$overrides['BudgetBase'] }

@@ -6,7 +6,7 @@ Read the delegation table in that section. The writer model is the one named in 
 
 ## Drafting
 
-Steps 2 to 4 of SKILL.md are drafting work and go to an Ollama Cloud writer.
+Step 4 of SKILL.md is drafting work and goes to an Ollama Cloud writer. Steps 2 (fit score) and 3 (ATS baseline and keyword list) stay on Claude.
 
 For each JD, build a prompt with:
 - the master CV text,
@@ -14,11 +14,11 @@ For each JD, build a prompt with:
 - the output format from step 7,
 - the honesty constraints from steps 4 and 6.
 
-Ask for a markdown draft plus a before and after keyword list. Plain ASCII only.
+Ask for a markdown draft. Plain ASCII only.
 
 Send the prompt by one of these routes:
 
-1. Track A drop folder. Write a task file to <TRACK_A_DIR>/tasks using the format in ollama-addon/README.md at the repo root. Poll for the matching done file. Do not redesign the format.
+1. Track A drop folder. Write a task file to <TRACK_A_DIR>/tasks using the task file format in ollama-addon/README.md, section Task file format. Poll for the matching done file. Do not redesign the format.
 2. Local Ollama HTTP API. POST to http://localhost:11434/api/chat with stream false:
 
 curl -s http://localhost:11434/api/chat -H "Content-Type: application/json" -d @request.json
@@ -27,12 +27,12 @@ request.json must contain "model" set to the routine row model, "stream": false,
 
 ## Fan-out
 
-For N JDs, run up to the lane cap in the delegation table. Queue the rest and start the next when a lane frees. Do not exceed the cap.
+For N JDs, run up to the lane cap in <TRACK_A_DIR>/max_parallel.txt (default 3). Queue the rest and start the next when a lane frees. Do not exceed the cap.
 
 ## Required re-checks
 
-Claude always re-runs step 5 (ATS coverage after) and step 6 (honesty audit) itself against the returned draft before showing anything. Discard any line that fails. Never show raw writer output.
+Claude always re-runs step 5 (ATS coverage after) and step 6 (honesty audit) itself against the returned draft before showing anything. Before steps 5 and 6, Claude re-verifies that every quoted evidence line and every claim in the draft appears in the master CV. Discard any line that fails. Never show raw writer output.
 
 ## Data handling
 
-CV content is personal data. Only send it to models and endpoints the user has approved. If the table is missing, the endpoint is not approved, or approval is unclear, stop and ask. Do not send CV text to a third-party service.
+CV content is personal data. Only send it to models and endpoints the user has approved. If the table is missing, the endpoint is not approved, or approval is unclear, stop and ask. CV text goes only to the Ollama endpoint the user approved, nowhere else. Delete any temp request file after the call.

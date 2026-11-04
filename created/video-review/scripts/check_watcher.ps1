@@ -17,7 +17,13 @@ if (Test-WatcherRunning) { exit 0 }
 
 try { Stop-ScheduledTask -TaskName $taskName -ErrorAction Stop } catch { }
 
-try { Start-ScheduledTask -TaskName $taskName -ErrorAction Stop } catch {
+try {
+    $state = (Get-ScheduledTask -TaskName $taskName -ErrorAction Stop).State
+    if ($state -eq "Disabled") {
+        Enable-ScheduledTask -TaskName $taskName -ErrorAction Stop | Out-Null
+    }
+    Start-ScheduledTask -TaskName $taskName -ErrorAction Stop
+} catch {
     Write-Host "Error: Could not start scheduled task '$taskName'. Ensure you have permissions."
     exit 1
 }
@@ -26,5 +32,5 @@ Start-Sleep -Seconds 2
 
 if (Test-WatcherRunning) { exit 0 }
 
-Write-Host "Error: The watcher task '$taskName' could not be started after retry. Registering a brand-new scheduled task requires an interactive credential prompt only a human can supply."
+Write-Host "Error: The watcher task '$taskName' could not be started after retry. If it is disabled, enable it with Enable-ScheduledTask, or re-register it with register_ollama_watcher_task.ps1 from ollama-addon/track-a."
 exit 1

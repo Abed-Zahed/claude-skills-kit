@@ -13,7 +13,7 @@ The path may point to markdown or YAML. An argument overrides it. If the file is
 
 Inputs: one or more JDs as pasted text or URLs. Fetch URLs with WebFetch. If a URL fails, report it and continue with the rest.
 
-Before step 2, check ~/.claude/CLAUDE.md. If it has a section named "Ollama Cloud delegation", read ollama_addon.md in this skill directory and use it for steps 2 to 4. Otherwise use the steps below as written.
+Before step 2, check ~/.claude/CLAUDE.md. If it has a section named "Ollama Cloud delegation", read ollama_addon.md in this skill directory and use it for step 4. Otherwise use the steps below as written.
 
 For each JD:
 
@@ -23,11 +23,11 @@ For each JD:
 
 3. ATS (Applicant Tracking System) coverage before. List each JD keyword with status present, partial, or missing in the master CV. Coverage = present / total. State the method.
 
-4. Tailor. Reorder and select existing bullets. Rewrite wording toward the JD's terms only when the CV supports the claim. Write one bespoke summary line. Keep employers, titles, dates, and metrics unchanged. Do not add claims.
+4. Tailor. Reorder and select existing bullets. Rewrite wording toward the JD's terms only when the CV supports the claim. Write one bespoke summary line; it may only restate or combine statements already in the master CV. Keep employers, titles, dates, and metrics unchanged. Do not add claims.
 
 5. ATS coverage after. Recompute with the same keyword list. It must not drop. If a term is missing, leave it missing.
 
-6. Honesty audit. Every skill, tool, number, employer, title, and date in the output must appear in the master CV. List and remove anything that does not. No hidden text, no keyword stuffing, no instructions to screening tools. Missing JD requirements become gaps, not CV lines.
+6. Honesty audit. Every skill, tool, number, employer, title, and date in the output must appear in the master CV. The audit also covers qualitative claims such as seniority, "expert", and "led", not only skills, numbers, and employers. List and remove anything that does not. No hidden text, no keyword stuffing, no instructions to screening tools. Missing JD requirements become gaps, not CV lines.
 
 7. Output. Write ./tailored/<company>_<role>.md. Use lowercase ASCII and hyphens in the slug. Write HTML beside it only if asked. Then print exactly five lines:
 1 Role at company, fit N/100.

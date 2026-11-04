@@ -1,4 +1,5 @@
 ---
+name: improve-system
 description: 5-mode system improvement skill. Triggered automatically when asked to "review your work", "double check", or "improve the process". Modes: audit, skill-review, experience, historical-review, foundation.
 ---
 

@@ -1,4 +1,5 @@
 ---
+name: ask-the-board
 description: Advisory board skill. Two modes: recommend (suggest 2 expert advisors for a context) or consult (get each advisor's take on a decision in their own voice). Bias toward creators for consumer-product questions, senior professionals for career questions.
 ---
 
@@ -20,7 +21,7 @@ Triggered when: "who should be on my board for X?" or starting a new context wit
 ### Consult mode
 Triggered when a decision or question is asked and a board exists for that context.
 
-1. Read the saved board profiles from `knowledge/board/<topic>-board.md`
+1. Read the saved board profiles from `~/.claude/knowledge/board/<topic>-board.md`
 2. Write each advisor's response **in their own voice**, their actual style, not a generic answer
 3. Advisors should disagree where they genuinely would
 4. Synthesize at the end

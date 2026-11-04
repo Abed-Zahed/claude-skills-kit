@@ -1,4 +1,5 @@
 ---
+name: ingest-resource
 description: Save any article, link, transcript, PDF, or note to the right folder. Routes to knowledge/ (stable) or projects/ (active). Adds a structured summary block at the top and cross-links with [[wikilinks]].
 ---
 

@@ -26,7 +26,8 @@ Rigor:
 - **Never delegate:** git/deploy/merge/PR actions; physics/simulation correctness (mandatory multi-layer review); data belonging to anyone other than the user; anything under `.claude/**` (Claude's to edit).
 - **Size floor:** above XS goes to Ollama by default; skip only when the round trip honestly costs more than the fix.
 - **Failure ladder:** attempt 1 default, attempt 2 same model with a sharper prompt and rigor up one, attempt 3 rotate, attempt 4 ask the user. Timeouts rotate immediately. Never silently self-execute after all fail.
-- **Explicit-call-only expensive model:** the most expensive model in the roster (`kimi-k3:cloud` in this example) is called only when the user explicitly names it, for one end-of-project review. Never default, never fallback.
+- **Turn caps and long tasks:** default 25 turns and 8 minutes, deepseek models 60 turns and 20 minutes; explicit `-MaxTurns` and `-TimeoutMinutes` win. A task that will plausibly pass about 60 turns is split, or handed to a Cline handover instead (Cline: an open-source VS Code coding agent that can run on the same Ollama Cloud models in an interactive session; Claude writes the handover file, you run it).
+- **Explicit-call-only expensive model:** the most expensive model in the roster (`kimi-k3:cloud` in this example) is called only when the user names it, or when Claude recommends it and the user approves, for one end-of-project review. Never default, never fallback.
 - **Security/policy reviews:** paste the project's standing rules into the reviewer prompt; the reviewer cannot infer them.
-- **Report every dispatch:** `Delegated: <category> -> <model> @ <R1|R2|R3>`, `Escalated: no|yes (trigger)`, `Attempts: N`, with the per-piece delegation estimate before and the actual percent after.
-- **Bare `ollama run`** cannot reach MCP tools, Skills or hooks; Track A (`run_ollama_batch.ps1`) can when the worker settings allow it. Turn caps and long-context handover rules live in the Track A setup guide.
+- **Report every dispatch:** after the result, print exactly this one line: `Delegated: <model> @ <rigor> x<calls>, escalated: no|yes, attempts: <N>`.
+- **Bare `ollama run`** cannot reach MCP tools, Skills or hooks; Track A (`run_ollama_batch.ps1`) can when the worker settings allow it.

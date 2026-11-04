@@ -66,7 +66,7 @@ You can run the skill on a schedule with Windows Task Scheduler. The task runs C
 
    $action = New-ScheduledTaskAction `
      -Execute "powershell.exe" `
-     -Argument "-NoProfile -Command `"claude -p '/video-review $linksFile'`"" `
+     -Argument "-NoProfile -Command `"claude -p '/video-review $linksFile' --allowedTools 'WebFetch,Bash,Read,Write'`"" `
      -WorkingDirectory $workDir
 
    $trigger = New-ScheduledTaskTrigger -Weekly -DaysOfWeek Monday -At 9am
@@ -76,6 +76,8 @@ You can run the skill on a schedule with Windows Task Scheduler. The task runs C
      -Action $action `
      -Trigger $trigger
    ```
+
+   A headless `claude -p` run denies tools unless they are allowed. The example above allows WebFetch, Bash, Read, and Write; narrow `--allowedTools` to only the tools this run needs.
 
    If the task account cannot find `claude` in its command search path, replace `claude` with the full path to the Claude Code executable.
 

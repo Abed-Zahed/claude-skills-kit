@@ -17,9 +17,9 @@ Claude Code skills for engineering, research, job applications and decision maki
 | `/polish-prompt` | Rewrites a rough prompt into a specific one, splits bundled tasks, picks model and effort, routes to a matching skill | `ollama_routing.md` |
 | `/modern-engineer` | 5-phase build workflow: brainstorm, plan, work, review, debug. Interviews before coding | |
 | `/web-scraping` | Research router: cache first, free tools first, paid MCP (Model Context Protocol) tools only when needed | optional Firecrawl budget hook |
-| `/tailor-jd` | Tailors your master CV to one or more JDs (job descriptions) with a fit score, ATS (Applicant Tracking System) coverage and an honesty audit | `ollama_addon.md` |
+| `/tailor-jd` | Tailors your master CV (curriculum vitae) to one or more JDs (job descriptions) with a fit score, ATS (Applicant Tracking System) coverage and an honesty audit | `ollama_addon.md` |
 | `/video-review` | Batch-reviews social video links against per-link instructions, one consolidated report | `ollama_addon.md` |
-| `/task-status` | Shows which subagent dispatches are pending or finished, from a local log. Zero API cost | logging hook (required) |
+| `/task-status` | Shows which subagent dispatches are pending or finished, from a local log. No model or API (Application Programming Interface) calls | logging hook (optional, log is empty until installed) |
 | `/ask-the-board` | Recommends two expert advisors for a context, then gives each one's take on a decision | |
 | `/internal-focus-group` | Panel of real people, built from notes you saved, each answering in their own voice | |
 | `/ingest-resource` | Files articles, links, PDFs and transcripts into `knowledge/` or `projects/` with a summary block | |
@@ -67,4 +67,4 @@ Without that section in `CLAUDE.md`, every skill runs on Claude only and never m
 
 ## License
 
-MIT for `created/` and `ollama-addon/`. Collected skills keep their own license.
+MIT ([LICENSE](LICENSE)) for `created/` and `ollama-addon/`. Collected skills keep their own license (task-observer: CC BY 4.0).

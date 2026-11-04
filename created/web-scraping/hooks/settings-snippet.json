@@ -2,7 +2,7 @@
   "hooks": {
     "PreToolUse": [
       {
-        "matcher": "mcp__(firecrawl|gemini)__.*",
+        "matcher": "mcp__(firecrawl|claude_ai_Firecrawl|gemini)__.*",
         "hooks": [
           {
             "type": "command",

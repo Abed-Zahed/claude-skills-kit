@@ -1,3 +1,4 @@
 # Graphify knowledge graph output (regenerated via `graphify update .`)
 graphify-out/
 desktop.ini
+__pycache__/

@@ -2,3 +2,4 @@
 graphify-out/
 desktop.ini
 __pycache__/
+.ruff_cache/

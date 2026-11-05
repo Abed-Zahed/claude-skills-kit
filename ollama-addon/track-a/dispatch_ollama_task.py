@@ -22,8 +22,13 @@ HEADER_KEYS = ("TimeoutMinutes", "MaxTurns", "OutFile", "BudgetKey", "BudgetBase
 def get_drop_dir():
     value = os.environ.get("TRACK_A_DIR")
     if not value:
+        # Scheduled-task callers get no shell env; the drop folder sits beside this script.
+        sibling = Path(__file__).resolve().parent / "ollama_dropfolder"
+        if sibling.is_dir():
+            return sibling
         print(
-            "Error: TRACK_A_DIR is not set. Set it to the Track A dropfolder path.",
+            "Error: TRACK_A_DIR is not set and no ollama_dropfolder sits beside this "
+            "script. Set TRACK_A_DIR to the Track A dropfolder path.",
             file=sys.stderr,
         )
         sys.exit(1)

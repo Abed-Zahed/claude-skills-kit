@@ -5,7 +5,7 @@ try {
     Get-ScheduledTask -TaskName $taskName -ErrorAction Stop | Out-Null
 } catch {
     Write-Host "Error: Could not retrieve scheduled task '$taskName'. Ensure the task exists and you have permissions."
-    Write-Host "Register it with: powershell -ExecutionPolicy Bypass -File `"$env:USERPROFILE\.claude\ollama-addon\track-a\register_ollama_watcher_task.ps1`""
+    Write-Host "Register it with: powershell -ExecutionPolicy Bypass -File `"$PSScriptRoot\register_ollama_watcher_task.ps1`""
     exit 1
 }
 

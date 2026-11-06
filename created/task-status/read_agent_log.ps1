@@ -121,7 +121,7 @@ foreach ($d in $dispatches) {
     }
 
     # Otherwise the earliest unconsumed finish with the same description.
-    if (-not $match -and $desc) {
+    if (-not $match -and -not $exactId -and $desc) {
         $match = @($finishes | Where-Object { -not $_.Consumed -and $_.Pos -gt $d.Pos -and $_.Description -eq $desc })[0]
     }
 

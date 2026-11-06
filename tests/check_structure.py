@@ -18,8 +18,12 @@ import tempfile
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 SKILL_DIRS = sorted(p for base in ("created", "collected") for p in (ROOT / base).iterdir() if p.is_dir())
-PRIVATE = re.compile(r"[A-Z]:[\\/](Projects|Work)\b|C:[\\/]Users[\\/](?!<|%|\$)|cool_|Administrator|Abed|Zahed|Defuzzy|furssai|"
-                     r"Job.?Hunter|Agent_Orchestrator|Azure Choc|Reel.?checker|chat_id\.txt|Faction", re.I)
+GENERIC = r"[A-Z]:[\\/](Projects|Work)\b|C:[\\/]Users[\\/](?!<|%|\$)|chat_id\.txt"
+# Your own names, usernames and private project names: one regex per line in
+# tests/private_patterns.local (gitignored), so the shipped test never lists them.
+_local = ROOT / "tests" / "private_patterns.local"
+_extra = [ln.strip() for ln in _local.read_text(encoding="utf-8").splitlines() if ln.strip() and not ln.startswith("#")] if _local.exists() else []
+PRIVATE = re.compile("|".join([GENERIC, *_extra]), re.I)
 MODEL = re.compile(r"\b(deepseek-v\d|glm-\d|kimi-k\d|qwen\d)", re.I)
 # Skills whose job depends on something outside stock Claude Code.
 NEEDS_SETUP = {"polish-prompt", "tailor-jd", "task-status", "web-scraping", "video-review",
@@ -52,6 +56,11 @@ def frontmatter(text):
 with tempfile.TemporaryDirectory() as tmp:
     home = pathlib.Path(tmp) / "home" / ".claude"
     shutil.copytree(ROOT / "ollama-addon", home / "ollama-addon")
+    for f in (home / "ollama-addon").rglob("*"):
+        if f.is_file() and f.suffix in {".md", ".ps1", ".py", ".json", ".txt"}:
+            body = f.read_text(encoding="utf-8")
+            for m in PRIVATE.finditer(body):
+                fail(f"ollama-addon/{f.relative_to(home / 'ollama-addon').as_posix()}: private string {m.group(0)!r}")
     for sd in SKILL_DIRS:
         dest = home / "skills" / sd.name
         shutil.copytree(sd, dest)
@@ -111,7 +120,11 @@ ps1 = [str(p) for p in ROOT.rglob("*.ps1")]
 if ps1 and shutil.which("powershell"):
     script = ("$bad=0; foreach($f in $args){$e=$null;[void][System.Management.Automation.Language.Parser]::ParseFile($f,[ref]$null,[ref]$e);"
               "if($e.Count){Write-Output \"$f : $($e[0].Message)\"; $bad++}}; exit $bad")
-    r = subprocess.run(["powershell", "-NoProfile", "-Command", script, *ps1], capture_output=True, text=True)
+    # -Command does not expose trailing arguments as $args, so run it as a script file.
+    with tempfile.NamedTemporaryFile("w", suffix=".ps1", delete=False) as sf:
+        sf.write(script)
+    r = subprocess.run(["powershell", "-NoProfile", "-ExecutionPolicy", "Bypass", "-File", sf.name, *ps1], capture_output=True, text=True)
+    pathlib.Path(sf.name).unlink()
     for line in r.stdout.splitlines():
         fail(f"PowerShell parse: {line}")
 

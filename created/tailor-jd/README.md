@@ -26,7 +26,7 @@ New-Item -ItemType Directory -Force $env:USERPROFILE\.claude\skills | Out-Null
 Copy-Item -Recurse created\tailor-jd $env:USERPROFILE\.claude\skills\tailor-jd
 ```
 
-Set the config line in `~/.claude/skills/tailor-jd/SKILL.md`:
+Set the config line in `<this skill folder>/SKILL.md`:
 
 ```
 MASTER_CV: <MASTER_CV_PATH>
@@ -36,7 +36,7 @@ Reload Claude Code.
 
 ## Config
 
-Open `~/.claude/skills/tailor-jd/SKILL.md` and set the config line:
+Open `<this skill folder>/SKILL.md` and set the config line:
 
 ```
 MASTER_CV: <MASTER_CV_PATH>

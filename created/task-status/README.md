@@ -7,7 +7,7 @@ The log is `~/.claude/agent_task_log.jsonl`. The file is JSON Lines (JSONL, a te
 ## Setup
 
 Required:
-- Windows PowerShell 5.1 or later. Check: `powershell -NoProfile -Command "if ($PSVersionTable.PSVersion -ge [version]'5.1') { exit 0 } else { exit 1 }"`
+- Windows PowerShell 5.1 or later. Check: `powershell -NoProfile -Command 'if ($PSVersionTable.PSVersion -ge [version]"5.1") { exit 0 } else { exit 1 }'`
 - The logging hook `hooks/log_agent_task.ps1` copied to `~/.claude/hooks/`. Check: `test -r ~/.claude/hooks/log_agent_task.ps1`
 - The `hooks/settings-snippet.json` entries merged into `~/.claude/settings.json`. Check: `grep -q log_agent_task ~/.claude/settings.json`
 

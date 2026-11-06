@@ -11,7 +11,7 @@ When it runs: when the user types `/tailor-jd setup`, or automatically before th
 
 | Item | Required or optional | How to check |
 |---|---|---|
-| MASTER_CV path | required | `p=$(sed -n 's/^MASTER_CV:[[:space:]]*//p' ~/.claude/skills/tailor-jd/SKILL.md); p=${p/#\~/$HOME}; e=${p##*.}; test -r "$p" && { test "$e" = md -o "$e" = markdown -o "$e" = yml -o "$e" = yaml; }` |
+| MASTER_CV path | required | `p=$(sed -n 's/^MASTER_CV:[[:space:]]*//p' <this skill folder>/SKILL.md); p=${p/#\~/$HOME}; e=${p##*.}; test -r "$p" && { test "$e" = md -o "$e" = markdown -o "$e" = yml -o "$e" = yaml; }` |
 | Ollama add-on section | optional, add-on only | `grep -q "Ollama Cloud delegation" ~/.claude/CLAUDE.md` |
 | TRACK_A_DIR | optional, add-on only | `test -d "$TRACK_A_DIR"` |
 | Running watcher | optional, add-on only | `powershell -NoProfile -Command "if (Get-Process -Name '*watch*','*track*' -ErrorAction SilentlyContinue) { exit 0 } else { exit 1 }"` |

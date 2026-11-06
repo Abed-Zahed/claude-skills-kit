@@ -1,6 +1,6 @@
 ---
 name: modern-engineer
-description: 5-phase compound engineering workflow. Always start at Phase 1 (brainstorm) when asked to build anything. Phases: brainstorm → plan → work → review → debug. Never skip to coding without interviewing first.
+description: "5-phase compound engineering workflow. Always start at Phase 1 (brainstorm) when asked to build anything. Phases: brainstorm -> plan -> work -> review -> debug. Never skip to coding without interviewing first."
 ---
 
 # /modern-engineer

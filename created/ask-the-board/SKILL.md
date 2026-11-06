@@ -12,7 +12,7 @@ When it runs: when the user types `/ask-the-board setup`, or automatically befor
 | Item | Required or optional | How to check |
 |---|---|---|
 | No required items | Required | none; continue |
-| User profile in this SKILL.md | Optional | `grep -n "Role and years of experience" ~/.claude/skills/ask-the-board/SKILL.md` (placeholder present means MISSING) |
+| User profile in this SKILL.md | Optional | `grep -n "Role and years of experience" <this skill folder>/SKILL.md` (placeholder present means MISSING) |
 
 Interactive rules: print the checklist with OK / MISSING per item. If a REQUIRED item is missing, stop before doing the task, explain what it is for in one line, and offer to set it up now, step by step, asking the user before installing anything, editing settings.json, or creating files outside the skill folder. Never install silently. If only OPTIONAL items are missing, say in one line what is lost and continue.
 

@@ -13,6 +13,7 @@
 
 $ErrorActionPreference = 'Stop'
 $ResearchHome = if ($env:RESEARCH_HOME) { $env:RESEARCH_HOME } else { Join-Path $env:USERPROFILE 'research_cache' }
+if ($ResearchHome -match '^/([a-zA-Z])/(.*)$') { $ResearchHome = $Matches[1].ToUpper() + ':\' + ($Matches[2] -replace '/', '\') }  # Git Bash /c/... form
 $BudgetDir = Join-Path $ResearchHome '_budget'
 $StatePath = if ($env:RESEARCH_STATE_PATH) { $env:RESEARCH_STATE_PATH } else { Join-Path $BudgetDir 'research_budget_state.json' }
 $LogPath   = if ($env:RESEARCH_LOG_PATH)   { $env:RESEARCH_LOG_PATH }   else { Join-Path $BudgetDir 'research_tool_log.jsonl' }
@@ -80,7 +81,7 @@ try {
     }
     $url = if ($urls.Count -gt 0) { $urls[0] } else { $null }
 
-    $fcName = $toolName -replace '^mcp__(firecrawl|claude_ai_Firecrawl)__firecrawl_', ''
+    $fcName = $toolName -replace '^mcp__(firecrawl|claude_ai_Firecrawl)__(firecrawl_)?', ''
     # 0. Pure-input denies, evaluated before any state or lock so they hold even if the mutex stalls.
     if ($isFc -and $ti -and ($ti.pdfOptions -or ($ti.parsers -and (@($ti.parsers) -contains 'pdf')))) {
         Write-Log @{ ts = (Get-Date).ToUniversalTime().ToString('o'); key = $key; tool = $toolName; url = $url; est = 0; decision = 'deny-pdf-options' }
@@ -157,7 +158,7 @@ try {
             }
         }
     } else {
-        $name = $toolName -replace '^mcp__(firecrawl|claude_ai_Firecrawl)__firecrawl_', ''
+        $name = $toolName -replace '^mcp__(firecrawl|claude_ai_Firecrawl)__(firecrawl_)?', ''
         if ($NoCharge -contains $name) { $est = 0 }
         elseif ($name -eq 'crawl') {
             if ($ti -and $ti.limit) { $est = [int]$ti.limit } else { $decision = 'deny-crawl-nolimit'; $reason = 'firecrawl_crawl without an explicit limit is refused (it bills 1 credit per page crawled). Pass a small limit, or use map to list URLs (1 credit) and scrape only the ones you need.' }

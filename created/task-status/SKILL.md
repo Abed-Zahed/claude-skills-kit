@@ -11,7 +11,7 @@ When it runs: when the user types `/task-status setup`, or automatically before 
 
 | Item | Required or optional | How to check |
 |---|---|---|
-| Windows PowerShell 5.1+ | required | `powershell -NoProfile -Command "if ($PSVersionTable.PSVersion -ge [version]'5.1') { exit 0 } else { exit 1 }"` |
+| Windows PowerShell 5.1+ | required | `powershell -NoProfile -Command 'if ($PSVersionTable.PSVersion -ge [version]"5.1") { exit 0 } else { exit 1 }'` |
 | Logging hook file | required | `test -r ~/.claude/hooks/log_agent_task.ps1` |
 | Settings entries | required | `grep -q log_agent_task ~/.claude/settings.json` |
 

@@ -16,7 +16,7 @@ When it runs: when the user types `/video-review setup`, or before the first rea
 | Ticket tool or MCP server | optional | is a tool whose name starts with `mcp__<ticket_server>__` available in this session, or a ticket CLI is on PATH |
 | Ollama add-on CLAUDE.md section | optional | `grep "Ollama Cloud delegation" ~/.claude/CLAUDE.md` |
 | TRACK_A_DIR env var | optional | `test -n "$TRACK_A_DIR"` |
-| Watcher scheduled task | optional | `powershell.exe -NoProfile -ExecutionPolicy Bypass -File ./scripts/check_watcher.ps1` |
+| Watcher scheduled task | optional | `powershell.exe -NoProfile -ExecutionPolicy Bypass -File <this skill folder>/scripts/check_watcher.ps1` |
 
 Print OK/MISSING per item. If a required item is missing, stop before the task, explain its purpose in one line, and offer step-by-step setup, asking before installing, editing settings.json, or creating files outside the skill folder. Never install silently. If only optional items are missing, say what is lost in one line and continue. When every required item passes, write today's date to the marker file and continue with the original request.
 

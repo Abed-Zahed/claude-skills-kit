@@ -17,6 +17,7 @@ Claude Code skills for engineering, research, job applications and decision maki
 | `/polish-prompt` | Rewrites a rough prompt into a specific one, splits bundled tasks, picks model and effort, routes to a matching skill | `ollama_routing.md` |
 | `/modern-engineer` | 5-phase build workflow: brainstorm, plan, work, review, debug. Interviews before coding | |
 | `/web-scraping` | Research router: cache first, free tools first, paid MCP (Model Context Protocol) tools only when needed | optional Firecrawl budget hook |
+| `/research-fanout` | Splits one question into parallel research lanes you approve, then merges, verifies and cites one report. Resumes after a stop | `ollama_routing.md` |
 | `/tailor-jd` | Tailors your master CV (curriculum vitae) to one or more JDs (job descriptions) with a fit score, ATS (Applicant Tracking System) coverage and an honesty audit | `ollama_addon.md` |
 | `/video-review` | Batch-reviews social video links against per-link instructions, one consolidated report | `ollama_addon.md` |
 | `/task-status` | Shows which subagent dispatches are pending or finished, from a local log. No model or API (Application Programming Interface) calls | logging hook (required, the log is empty without it) |

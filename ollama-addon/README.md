@@ -15,6 +15,13 @@ Track A is a headless Claude Code process pointed at an Ollama Cloud model, fed 
 
 Write the file as `<slug>.txt.tmp` then rename it to `<slug>.txt` so the watcher never reads a half-written file. The watcher renames a claimed task to `<slug>.txt.inflight`; the result lands in `done/<slug>_done.txt`. Move results into `reviewed/` yourself after you check them. `OutFile` receives the run transcript, never point it at a report path.
 
+## Shared dispatch helpers
+
+`track-a/dispatch_ollama_task.py` and `track-a/check_watcher.ps1` live in `track-a/` and are shared by the video-review and research-fanout skills. Both read `TRACK_A_DIR`; the dispatcher also reads `TRACK_A_TASK_NAME` and defaults it to `ClaudeSkills_Ollama_DropfolderWatcher`. Run them from `<TRACK_A_HOME>` with `python` and `powershell -NoProfile -File`, and run `--selftest` once after install.
+
+- `--header KEY=VALUE` adds one optional task file header line. It is repeatable, and the lines are written in the order given, after the model line and before the prompt. KEY must be one of `TimeoutMinutes`, `MaxTurns`, `OutFile`, `BudgetKey`, `BudgetBase`; any other key, an empty value or a newline in the value exits 2 before a task file is written.
+- `--prompt-file PATH` reads the prompt from a UTF-8 file instead of `--prompt`, for prompts too long to pass on one command line. Pass exactly one of the two.
+
 ## Prerequisites
 
 - Windows.

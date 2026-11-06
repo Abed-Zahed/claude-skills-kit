@@ -23,7 +23,7 @@ Required: none for page-text review. WebFetch is built in.
 | Ticket tool or MCP (Model Context Protocol) server | optional | Configure the ticket system, or add an MCP server with `claude mcp add <ticket_server> -- <ticket_server_command>`; confirm a tool whose name starts with `mcp__<ticket_server>__` is available in this session. |
 | Ollama add-on CLAUDE.md section | optional | Add an "Ollama Cloud delegation" section to `~/.claude/CLAUDE.md`; check `grep "Ollama Cloud delegation" ~/.claude/CLAUDE.md`. |
 | TRACK_A_DIR environment variable | optional | Set `export TRACK_A_DIR="<track-a-dropfolder>"` in your shell profile; check `test -n "$TRACK_A_DIR"`. |
-| Watcher scheduled task | optional | Register a Windows Task Scheduler task that runs the watcher, for example `schtasks /Create /TN "<task-name>" /SC ONLOGON /TR "<watcher-command>"`, then check `powershell.exe -NoProfile -ExecutionPolicy Bypass -File <this skill folder>/scripts/check_watcher.ps1`. |
+| Watcher scheduled task | optional | Register a Windows Task Scheduler task that runs the watcher, for example `schtasks /Create /TN "<task-name>" /SC ONLOGON /TR "<watcher-command>"`, then check `powershell.exe -NoProfile -ExecutionPolicy Bypass -File <TRACK_A_HOME>/check_watcher.ps1`. |
 
 Run `/video-review setup` after installing to print a status for each item and write the marker file when all required items pass.
 
@@ -51,7 +51,7 @@ If yt-dlp is missing, the skill uses WebFetch page text and metadata. If Whisper
 
 ## Optional Ollama Cloud add-on
 
-If `~/.claude/CLAUDE.md` contains an "Ollama Cloud delegation" section, the skill loads `ollama_addon.md` and sends per-link fetch and first-pass summary work to Track A. The model choice comes from the delegation table in `~/.claude/CLAUDE.md`, not from this skill. The add-on uses `scripts/dispatch_ollama_task.py` and `scripts/check_watcher.ps1`. Set `TRACK_A_DIR` to the Track A dropfolder. Set `TRACK_A_TASK_NAME` if your watcher task name differs from the default.
+If `~/.claude/CLAUDE.md` contains an "Ollama Cloud delegation" section, the skill loads `ollama_addon.md` and sends per-link fetch and first-pass summary work to Track A. The model choice comes from the delegation table in `~/.claude/CLAUDE.md`, not from this skill. The add-on uses `<TRACK_A_HOME>/dispatch_ollama_task.py` and `<TRACK_A_HOME>/check_watcher.ps1`, the shared helpers in `ollama-addon/track-a/`. Set `TRACK_A_DIR` to the Track A dropfolder. Set `TRACK_A_TASK_NAME` if your watcher task name differs from the default.
 
 ## Ticket creation
 

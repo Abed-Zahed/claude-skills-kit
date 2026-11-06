@@ -7,12 +7,12 @@ Read the Ollama Cloud delegation table in `~/.claude/CLAUDE.md` to choose the mo
 
 ## Watcher check
 Before each dispatch batch, run:
-`powershell -NoProfile -File scripts/check_watcher.ps1`
-from the skill directory. The script exits 0 when the watcher is running or was started. If it exits nonzero, stop and tell the user the watcher needs manual attention. Do not fall back to fetching every link yourself. Do not run the watcher's batch script directly, only the watcher process should run it.
+`powershell -NoProfile -File <TRACK_A_HOME>/check_watcher.ps1`
+where `<TRACK_A_HOME>` is the Track A folder set up in step 2 of `ollama-addon/README.md`. The script exits 0 when the watcher is running or was started. If it exits nonzero, stop and tell the user the watcher needs manual attention. Do not fall back to fetching every link yourself. Do not run the watcher's batch script directly, only the watcher process should run it.
 
 ## Dispatch per link
 For each link, dispatch a Track A task with:
-`python scripts/dispatch_ollama_task.py --slug <slug> --working-dir <working-dir> --model <model-from-table> --prompt <prompt>`
+`python <TRACK_A_HOME>/dispatch_ollama_task.py --slug <slug> --working-dir <working-dir> --model <model-from-table> --prompt <prompt>`
 
 The script reads `TRACK_A_DIR`. The scheduled task name comes from `TRACK_A_TASK_NAME` and defaults to `ClaudeSkills_Ollama_DropfolderWatcher`.
 

@@ -1,0 +1,6 @@
+desktop.ini
+__pycache__/
+.ruff_cache/
+.setup_ok
+tests/private_patterns.local
+.tutorial_offered

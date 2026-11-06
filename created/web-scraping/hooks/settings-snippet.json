@@ -1,0 +1,16 @@
+{
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "mcp__(firecrawl|claude_ai_Firecrawl|gemini)__.*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "powershell -NoProfile -ExecutionPolicy Bypass -File \"$USERPROFILE/.claude/hooks/firecrawl_budget_gate.ps1\"",
+            "shell": "bash"
+          }
+        ]
+      }
+    ]
+  }
+}

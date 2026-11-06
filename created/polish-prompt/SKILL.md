@@ -1,9 +1,25 @@
 ---
 name: polish-prompt
-description: Rewrites a rough or vague prompt into a clean, specific request for Claude Code. Flags missing context, condenses pastes, splits bundled tasks, recommends model and effort, and routes to a matching skill. Use when the user types /polish-prompt or asks to clean up a prompt before running it.
+description: 'Rewrites a rough or vague prompt into a clean, specific request for Claude Code. Flags missing context, condenses pastes, splits bundled tasks, recommends model and effort, and routes to a matching skill. Use when the user types /polish-prompt or asks to clean up a prompt before running it. Setup: none required; optional: the usage-live skill (for the Claude usage check), and for the Ollama add-on only: an "Ollama Cloud delegation" section in ~/.claude/CLAUDE.md (template: ~/.claude/ollama-addon/CLAUDE_SECTION.md in the kit), the OLLAMA_API_KEY env var (usage check via https://ollama.com/api/balance), and the Track A drop folder in the TRACK_A_DIR env var for headless delegation. The setup check only checks the add-on items when the CLAUDE.md section exists. Run /polish-prompt setup after installing.'
 ---
 
 # /polish-prompt
+
+## Setup check (first run)
+
+When it runs: when the user types `/polish-prompt setup`, or automatically before the first real run when the marker file `.setup_ok` in this skill's own folder (the folder holding this SKILL.md, user or project install) does not exist.
+
+| Item | Required or optional | How to check |
+|---|---|---|
+| Required dependencies | required | none required |
+| usage-live skill | optional | `test -d ~/.claude/skills/usage-live` |
+| Ollama add-on section | optional, add-on only | `grep -q "Ollama Cloud delegation" ~/.claude/CLAUDE.md` |
+| OLLAMA_API_KEY | optional, add-on only | `test -n "$OLLAMA_API_KEY"` |
+| TRACK_A_DIR | optional, add-on only | `test -d "$TRACK_A_DIR"` |
+
+Check add-on rows only when the Ollama add-on section exists. Print OK / MISSING per item. If a REQUIRED item is missing, stop before the task, explain its purpose in one line, and offer step-by-step setup, asking before installing, editing settings.json, or creating files outside the skill folder. Never install silently. If only OPTIONAL items are missing, say in one line what is lost and continue.
+
+When every required item passes, write today's date to the marker file (`date +%F > <this skill folder>/.setup_ok`), then continue the user's original request (if any).
 
 Usage: `/polish-prompt <rough text>`.
 

@@ -2,9 +2,17 @@
 
 Tailors a master CV (curriculum vitae) to one or more JDs (job descriptions). For each JD it gives a fit score, ATS (Applicant Tracking System) keyword coverage before and after, a tailored markdown file, and an honesty audit. The base skill runs on stock Claude Code with no Ollama, hooks, or MCP (Model Context Protocol) servers.
 
-## Install
+## Setup
 
-Copy this folder into your Claude Code skills directory:
+Required:
+- The `MASTER_CV` config line points to a readable markdown or YAML (YAML Ain't Markup Language) file.
+
+Optional, only for the Ollama add-on:
+- An "Ollama Cloud delegation" section in `~/.claude/CLAUDE.md`.
+- The `TRACK_A_DIR` environment variable for the Track A drop folder.
+- A running watcher.
+
+Install commands:
 
 ```bash
 mkdir -p ~/.claude/skills
@@ -16,6 +24,12 @@ Windows PowerShell:
 ```powershell
 New-Item -ItemType Directory -Force $env:USERPROFILE\.claude\skills | Out-Null
 Copy-Item -Recurse created\tailor-jd $env:USERPROFILE\.claude\skills\tailor-jd
+```
+
+Set the config line in `~/.claude/skills/tailor-jd/SKILL.md`:
+
+```
+MASTER_CV: <MASTER_CV_PATH>
 ```
 
 Reload Claude Code.

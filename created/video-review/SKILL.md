@@ -1,9 +1,24 @@
 ---
 name: video-review
-description: Batch-review social video links (Instagram, Facebook, YouTube) against per-link free-text instructions. Fetches page text and metadata with WebFetch or yt-dlp when installed, transcribes locally with yt-dlp plus a Whisper build for exact claim checks or timestamps, takes screenshots with ffmpeg, and writes one verdict per link plus a consolidated report. Use when the user pastes several video links with review instructions or points to a links file. Optional ticket creation only when a ticket tool or MCP server is configured.
+description: "Batch-review social video links (Instagram, Facebook, YouTube) against per-link free-text instructions. Fetches page text and metadata with WebFetch or yt-dlp when installed, transcribes locally with yt-dlp plus a Whisper build for exact claim checks or timestamps, takes screenshots with ffmpeg, and writes one verdict per link plus a consolidated report. Use when the user pastes several video links with review instructions or points to a links file. Optional ticket creation only when a ticket tool or MCP server is configured. Setup: none required for page-text review (WebFetch); optional: yt-dlp, ffmpeg, a Whisper build, a ticket tool or MCP server, the Ollama add-on CLAUDE.md section, TRACK_A_DIR env var, and watcher scheduled task. Run /video-review setup after installing."
 ---
 
 # /video-review
+
+## Setup check (first run)
+When it runs: when the user types `/video-review setup`, or before the first real run when `.setup_ok` in this skill's own folder (the folder holding this SKILL.md) is absent. Required: none for page-text review; WebFetch is built in.
+
+| Item | Required or optional | How to check |
+|---|---|---|
+| yt-dlp | optional | `yt-dlp --version` |
+| ffmpeg | optional | `ffmpeg -version` |
+| Whisper build | optional | `python -c "import whisper"` or `python -c "import faster_whisper"` |
+| Ticket tool or MCP server | optional | is a tool whose name starts with `mcp__<ticket_server>__` available in this session, or a ticket CLI is on PATH |
+| Ollama add-on CLAUDE.md section | optional | `grep "Ollama Cloud delegation" ~/.claude/CLAUDE.md` |
+| TRACK_A_DIR env var | optional | `test -n "$TRACK_A_DIR"` |
+| Watcher scheduled task | optional | `powershell.exe -NoProfile -ExecutionPolicy Bypass -File ./scripts/check_watcher.ps1` |
+
+Print OK/MISSING per item. If a required item is missing, stop before the task, explain its purpose in one line, and offer step-by-step setup, asking before installing, editing settings.json, or creating files outside the skill folder. Never install silently. If only optional items are missing, say what is lost in one line and continue. When every required item passes, write today's date to the marker file and continue with the original request.
 
 ## When to use
 Use this skill when the user gives a batch of video links (Instagram, Facebook, YouTube), each paired with a free-text instruction. The user may paste the pairs or give a path to a plain text file with one pair per line.

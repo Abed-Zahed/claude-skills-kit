@@ -1,9 +1,24 @@
 ---
 name: web-scraping
-description: Research tool router for web fetches. Checks a local cache first, then uses free tools (WebSearch, WebFetch, curl plus pypdf for PDFs), then optional paid tools (Exa, Gemini, Firecrawl) only when installed and inside budget. Use when a task needs current information, page content, or text from a PDF.
+description: "Research tool router for web fetches. Checks a local cache first, then uses free tools (WebSearch, WebFetch, curl plus pypdf for PDFs), then optional paid tools (Exa, Gemini, Firecrawl) only when installed and inside budget. Use when a task needs current information, page content, or text from a PDF. Setup: none required; optional: Exa MCP server, Gemini MCP server, Firecrawl MCP server or claude.ai connector, curl, Python 3 with pypdf, Firecrawl budget hook, RESEARCH_HOME env var. Run /web-scraping setup after installing."
 ---
 
 # /web-scraping
+
+## Setup check (first run)
+When it runs: when the user types `/web-scraping setup`, or before the first real run when `.setup_ok` in this skill's own folder (the folder holding this SKILL.md) is absent. Required: none; WebSearch and WebFetch are built in.
+
+| Item | Required or optional | How to check |
+|---|---|---|
+| Exa MCP server | optional | is a tool whose name starts with `mcp__exa__` or `mcp__claude_ai_Exa__` available in this session |
+| Gemini MCP server | optional | is a tool whose name starts with `mcp__gemini__` available in this session |
+| Firecrawl MCP server or claude.ai connector | optional | is a tool whose name starts with `mcp__firecrawl__` or `mcp__claude_ai_Firecrawl__` available in this session |
+| curl | optional | `curl --version` |
+| Python 3 with pypdf | optional | `python -c "import pypdf"` |
+| Firecrawl budget hook | optional | `grep firecrawl_budget_gate ~/.claude/settings.json` |
+| RESEARCH_HOME env var | optional | `printf '%s\n' "${RESEARCH_HOME:-$HOME/research_cache}"` |
+
+Print OK/MISSING per item. If a required item is missing, stop before the task, explain its purpose in one line, and offer step-by-step setup, asking before installing, editing settings.json, or creating files outside the skill folder. Never install silently. If only optional items are missing, say what is lost in one line and continue. When every required item passes, write today's date to the marker file and continue with the original request.
 
 Free first, cache first, paid last. If a tool is not installed, skip that rung silently and continue down the ladder.
 

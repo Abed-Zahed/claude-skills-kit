@@ -11,6 +11,22 @@ Copy the `created/video-review` folder into your Claude Code skills directory, f
 
 Restart Claude Code or reload skills if your setup requires it.
 
+## Setup
+
+Required: none for page-text review. WebFetch is built in.
+
+| Item | Required or optional | Install command and check |
+|---|---|---|
+| yt-dlp | optional | `python -m pip install -U yt-dlp` or `pipx install yt-dlp`; check `yt-dlp --version`. |
+| ffmpeg | optional | Install with `choco install ffmpeg`; check `ffmpeg -version`. |
+| Whisper build | optional | `python -m pip install -U openai-whisper` or `python -m pip install -U faster-whisper`; check `python -c "import whisper"` or `python -c "import faster_whisper"`. |
+| Ticket tool or MCP (Model Context Protocol) server | optional | Configure the ticket system, or add an MCP server with `claude mcp add <ticket_server> -- <ticket_server_command>`; confirm a tool whose name starts with `mcp__<ticket_server>__` is available in this session. |
+| Ollama add-on CLAUDE.md section | optional | Add an "Ollama Cloud delegation" section to `~/.claude/CLAUDE.md`; check `grep "Ollama Cloud delegation" ~/.claude/CLAUDE.md`. |
+| TRACK_A_DIR environment variable | optional | Set `export TRACK_A_DIR="<track-a-dropfolder>"` in your shell profile; check `test -n "$TRACK_A_DIR"`. |
+| Watcher scheduled task | optional | Register a Windows Task Scheduler task that runs the watcher, for example `schtasks /Create /TN "<task-name>" /SC ONLOGON /TR "<watcher-command>"`, then check `powershell.exe -NoProfile -ExecutionPolicy Bypass -File ./scripts/check_watcher.ps1`. |
+
+Run `/video-review setup` after installing to print a status for each item and write the marker file when all required items pass.
+
 ## Use
 
 Call the skill with one link and instruction per line:

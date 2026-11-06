@@ -1,9 +1,22 @@
 ---
 name: internal-focus-group
-description: Multi-agent focus group with real people as parallel agents. Each person has their own voice, lens, and history from ingested notes. Call one person or the whole panel. Results synthesized into one report.
+description: "Multi-agent focus group with real people as parallel agents. Each person has their own voice, lens, and history from ingested notes. Call one person or the whole panel. Results synthesized into one report. Setup: at least one member profile at ~/.claude/focus-group/<name>/profile.md (check: ls ~/.claude/focus-group/*/profile.md); optional: the ingest-resource skill to build profiles from notes. Run /internal-focus-group setup after installing."
 ---
 
 # /internal-focus-group
+
+## Setup check (first run)
+
+When it runs: when the user types `/internal-focus-group setup`, or automatically before the first real run when the marker file `.setup_ok` in this skill's own folder (the folder holding this SKILL.md, user or project install) does not exist.
+
+| Item | Required or optional | How to check |
+|---|---|---|
+| At least one member profile at `~/.claude/focus-group/<name>/profile.md` | Required | `ls ~/.claude/focus-group/*/profile.md` |
+| ingest-resource skill | Optional | `test -f ~/.claude/skills/ingest-resource/SKILL.md` |
+
+Interactive rules: print the checklist with OK / MISSING per item. If a REQUIRED item is missing, stop before doing the task, explain what it is for in one line, and offer to set it up now, step by step, asking the user before installing anything, editing settings.json, or creating files outside the skill folder. Never install silently. If only OPTIONAL items are missing, say in one line what is lost and continue.
+
+When every required item passes, write the marker file with today's date, then continue with the user's original request (if any).
 
 ## Setup
 Each focus group member lives in their own folder:
@@ -13,7 +26,7 @@ Files in that folder define their voice, background, opinions, and known content
 
 **To add a new member:**
 1. Gather notes, interviews, transcripts, or content from/about the person
-2. Run `/ingest-resource` → save to `~/.claude/focus-group/{name}/profile.md`
+2. Run `/ingest-resource` then save to `~/.claude/focus-group/{name}/profile.md`
 3. The skill picks them up automatically, no manual registration needed
 
 ---

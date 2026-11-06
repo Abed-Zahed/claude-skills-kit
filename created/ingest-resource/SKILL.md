@@ -1,9 +1,22 @@
 ---
 name: ingest-resource
-description: Save any article, link, transcript, PDF, or note to the right folder. Routes to knowledge/ (stable) or projects/ (active). Adds a structured summary block at the top and cross-links with [[wikilinks]].
+description: "Save any article, link, transcript, PDF, or note to the right folder. Routes to knowledge/ (stable) or projects/ (active). Adds a structured summary block at the top and cross-links with [[wikilinks]]. Setup: none required; optional: none; it creates ~/.claude/knowledge/ and ~/.claude/projects/ on first save after asking. Run /ingest-resource setup after installing."
 ---
 
 # /ingest-resource
+
+## Setup check (first run)
+
+When it runs: when the user types `/ingest-resource setup`, or automatically before the first real run when the marker file `.setup_ok` in this skill's own folder (the folder holding this SKILL.md, user or project install) does not exist.
+
+| Item | Required or optional | How to check |
+|---|---|---|
+| No required items | Required | none; continue |
+| No optional items | Optional | none; continue |
+
+Interactive rules: print the checklist with OK / MISSING per item. If a REQUIRED item is missing, stop before doing the task, explain what it is for in one line, and offer to set it up now, step by step, asking the user before installing anything, editing settings.json, or creating files outside the skill folder. Never install silently. If only OPTIONAL items are missing, say in one line what is lost and continue.
+
+When every required item passes, write the marker file with today's date, then continue with the user's original request (if any).
 
 ## When to use
 Any time external content should be saved for future reference:

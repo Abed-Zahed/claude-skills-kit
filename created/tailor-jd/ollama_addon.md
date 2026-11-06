@@ -18,7 +18,7 @@ Ask for a markdown draft. Plain ASCII only.
 
 Send the prompt by one of these routes:
 
-1. Track A drop folder. Write a task file to <TRACK_A_DIR>/tasks using the task file format in ollama-addon/README.md, section Task file format. Poll for the matching done file. Do not redesign the format.
+1. Track A drop folder. Write a task file to <TRACK_A_DIR>/tasks using the task file format in ~/.claude/ollama-addon/README.md, section Task file format. Poll for the matching done file. Do not redesign the format.
 2. Local Ollama HTTP API. POST to http://localhost:11434/api/chat with stream false:
 
 curl -s http://localhost:11434/api/chat -H "Content-Type: application/json" -d @request.json

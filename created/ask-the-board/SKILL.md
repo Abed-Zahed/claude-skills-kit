@@ -1,9 +1,22 @@
 ---
 name: ask-the-board
-description: Advisory board skill. Two modes: recommend (suggest 2 expert advisors for a context) or consult (get each advisor's take on a decision in their own voice). Bias toward creators for consumer-product questions, senior professionals for career questions.
+description: "Advisory board skill. Two modes: recommend (suggest 2 expert advisors for a context) or consult (get each advisor's take on a decision in their own voice). Bias toward creators for consumer-product questions, senior professionals for career questions. Setup: none required; optional: fill the \"User profile\" section in this SKILL.md with your own background (check: the section still contains the placeholder lines). Run /ask-the-board setup after installing."
 ---
 
 # /ask-the-board
+
+## Setup check (first run)
+
+When it runs: when the user types `/ask-the-board setup`, or automatically before the first real run when the marker file `.setup_ok` in this skill's own folder (the folder holding this SKILL.md, user or project install) does not exist.
+
+| Item | Required or optional | How to check |
+|---|---|---|
+| No required items | Required | none; continue |
+| User profile in this SKILL.md | Optional | `grep -n "Role and years of experience" ~/.claude/skills/ask-the-board/SKILL.md` (placeholder present means MISSING) |
+
+Interactive rules: print the checklist with OK / MISSING per item. If a REQUIRED item is missing, stop before doing the task, explain what it is for in one line, and offer to set it up now, step by step, asking the user before installing anything, editing settings.json, or creating files outside the skill folder. Never install silently. If only OPTIONAL items are missing, say in one line what is lost and continue.
+
+When every required item passes, write the marker file with today's date, then continue with the user's original request (if any).
 
 ## Two modes
 
@@ -59,7 +72,7 @@ Edit this list once with your own background:
 > "[Their honest take in their own voice and style]"
 
 ---
-✓ **They agree on:** [what both say]
-✗ **They disagree on:** [where they split and why]
-→ **What you should actually do:** [concrete synthesis]
+[OK] **They agree on:** [what both say]
+[NO] **They disagree on:** [where they split and why]
+-> **What you should actually do:** [concrete synthesis]
 ```

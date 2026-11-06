@@ -100,9 +100,8 @@
       "PowerShell(ssh *)",
       "PowerShell(scp *)",
       "PowerShell(nc *)",
-      "Bash(*.claude/*)",
-      "PowerShell(*.claude\\*)",
-      "PowerShell(*.claude/*)"
+      "Bash(*.claude*)",
+      "PowerShell(*.claude*)"
     ]
   },
   "hooks": {

@@ -1,9 +1,24 @@
 ---
 name: tailor-jd
-description: Tailors a master CV to one or more job descriptions (JDs). Produces a fit score, ATS keyword coverage before and after, a tailored markdown CV, and an honesty audit. Use when the user pastes JDs or job links and asks for a tailored CV or runs /tailor-jd.
+description: 'Tailors a master CV to one or more job descriptions (JDs). Produces a fit score, ATS keyword coverage before and after, a tailored markdown CV, and an honesty audit. Use when the user pastes JDs or job links and asks for a tailored CV or runs /tailor-jd. Setup: required: the master CV path on the MASTER_CV config line points to a readable markdown or YAML file; optional: for the Ollama add-on, an "Ollama Cloud delegation" section in ~/.claude/CLAUDE.md, the TRACK_A_DIR env var, and a running watcher. Run /tailor-jd setup after installing.'
 ---
 
 # tailor-jd
+
+## Setup check (first run)
+
+When it runs: when the user types `/tailor-jd setup`, or automatically before the first real run when the marker file `.setup_ok` in this skill's own folder (the folder holding this SKILL.md, user or project install) does not exist.
+
+| Item | Required or optional | How to check |
+|---|---|---|
+| MASTER_CV path | required | `p=$(sed -n 's/^MASTER_CV:[[:space:]]*//p' ~/.claude/skills/tailor-jd/SKILL.md); p=${p/#\~/$HOME}; e=${p##*.}; test -r "$p" && { test "$e" = md -o "$e" = markdown -o "$e" = yml -o "$e" = yaml; }` |
+| Ollama add-on section | optional, add-on only | `grep -q "Ollama Cloud delegation" ~/.claude/CLAUDE.md` |
+| TRACK_A_DIR | optional, add-on only | `test -d "$TRACK_A_DIR"` |
+| Running watcher | optional, add-on only | `powershell -NoProfile -Command "if (Get-Process -Name '*watch*','*track*' -ErrorAction SilentlyContinue) { exit 0 } else { exit 1 }"` |
+
+Check add-on rows only when the Ollama add-on section exists. Print OK / MISSING per item. If a REQUIRED item is missing, stop before the task, explain its purpose in one line, and offer step-by-step setup, asking before installing, editing settings.json, or creating files outside the skill folder. Never install silently. If only OPTIONAL items are missing, say in one line what is lost and continue.
+
+When every required item passes, write today's date to the marker file (`date +%F > <this skill folder>/.setup_ok`), then continue the user's original request (if any).
 
 Config line, set once:
 

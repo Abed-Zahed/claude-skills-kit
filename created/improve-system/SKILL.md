@@ -1,17 +1,30 @@
 ---
 name: improve-system
-description: 5-mode system improvement skill. Triggered automatically when asked to "review your work", "double check", or "improve the process". Modes: audit, skill-review, experience, historical-review, foundation.
+description: "5-mode system improvement skill. Triggered automatically when asked to \"review your work\", \"double check\", or \"improve the process\". Modes: audit, skill-review, experience, historical-review, foundation. Setup: your project memory folder ~/.claude/projects/<project>/memory/ exists (check: ls ~/.claude/projects/*/memory); optional: none. Run /improve-system setup after installing."
 ---
 
 # /improve-system
 
+## Setup check (first run)
+
+When it runs: when the user types `/improve-system setup`, or automatically before the first real run when the marker file `.setup_ok` in this skill's own folder (the folder holding this SKILL.md, user or project install) does not exist.
+
+| Item | Required or optional | How to check |
+|---|---|---|
+| Project memory folder `~/.claude/projects/<project>/memory/` | Required | `ls ~/.claude/projects/*/memory` |
+| No optional items | Optional | none; continue |
+
+Interactive rules: print the checklist with OK / MISSING per item. If a REQUIRED item is missing, stop before doing the task, explain what it is for in one line, and offer to set it up now, step by step, asking the user before installing anything, editing settings.json, or creating files outside the skill folder. Never install silently. If only OPTIONAL items are missing, say in one line what is lost and continue.
+
+When every required item passes, write the marker file with today's date, then continue with the user's original request (if any).
+
 ## Auto-trigger rule
 Run this skill automatically when the user says:
-- "review your work" / "double check" / "improve the process" → **skill-review**
-- "I just learned" / "we should remember" / "that worked well" → **experience**
-- "what did we miss" / "review our sessions" / "mine past sessions" → **historical-review**
-- "find duplicates" / "clean up notes" / "audit memory" → **audit**
-- "what are we missing" / "fill in the gaps" / "foundational" → **foundation**
+- "review your work" / "double check" / "improve the process" -> **skill-review**
+- "I just learned" / "we should remember" / "that worked well" -> **experience**
+- "what did we miss" / "review our sessions" / "mine past sessions" -> **historical-review**
+- "find duplicates" / "clean up notes" / "audit memory" -> **audit**
+- "what are we missing" / "fill in the gaps" / "foundational" -> **foundation**
 
 If mode is unclear from context, ask: *"Which mode? audit / skill-review / experience / historical-review / foundation"*
 

@@ -4,19 +4,24 @@
 
 The log is `~/.claude/agent_task_log.jsonl`. The file is JSON Lines (JSONL, a text format where each line is a JavaScript Object Notation (JSON) object). Optional hooks write one line per lifecycle event. The skill can still be installed and loaded without the hooks; it will report that no log exists or that the log is empty.
 
-## What it shows
+## Setup
 
-- Dispatches recorded by the PreToolUse hook for the Agent tool.
-- The real agent identifier (ID) and launch status from the PostToolUse hook.
-- Completion lines from the SubagentStop hook, including the last message.
-- Pending versus finished status. Pending means no completion line was recorded, which can mean still running or interrupted.
+Required:
+- Windows PowerShell 5.1 or later. Check: `powershell -NoProfile -Command "if ($PSVersionTable.PSVersion -ge [version]'5.1') { exit 0 } else { exit 1 }"`
+- The logging hook `hooks/log_agent_task.ps1` copied to `~/.claude/hooks/`. Check: `test -r ~/.claude/hooks/log_agent_task.ps1`
+- The `hooks/settings-snippet.json` entries merged into `~/.claude/settings.json`. Check: `grep -q log_agent_task ~/.claude/settings.json`
 
-## Install
+Without the hook the log stays empty, so treat it as required.
 
-1. Copy `SKILL.md` and `read_agent_log.ps1` to `~/.claude/skills/task-status/`.
-2. Copy `hooks/log_agent_task.ps1` to `~/.claude/hooks/`.
-3. Merge the entries from `hooks/settings-snippet.json` into `~/.claude/settings.json`.
-4. Start a new Claude Code session so the hooks load.
+Install commands:
+
+```bash
+mkdir -p ~/.claude/skills/task-status ~/.claude/hooks
+cp SKILL.md read_agent_log.ps1 ~/.claude/skills/task-status/
+cp hooks/log_agent_task.ps1 ~/.claude/hooks/
+```
+
+Merge the entries from `hooks/settings-snippet.json` into `~/.claude/settings.json`, then start a new Claude Code session so the hooks load.
 
 The scripts resolve the log path from the `USERPROFILE` environment variable at runtime. They do not hardcode a user path. On Windows, run the reader with PowerShell:
 

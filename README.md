@@ -45,7 +45,7 @@ cp -r created/polish-prompt ~/.claude/skills/
 Copy-Item -Recurse created\polish-prompt "$env:USERPROFILE\.claude\skills\"
 ```
 
-Skills with hooks or setup steps have their own `README.md` in the skill folder.
+After copying a skill, run `/<skill> setup`. Each skill with dependencies checks them on first use and walks you through anything missing, so it never breaks mid-call. Skills with hooks or setup steps also have their own `README.md`.
 
 Optional `/polish-prompt` nudge: merge `settings-hook-example.json` into `~/.claude/settings.json`. Start a prompt with `*` (already specific) or `#` (debugging, keep raw) to skip it.
 
@@ -53,8 +53,9 @@ Optional `/polish-prompt` nudge: merge `settings-hook-example.json` into `~/.cla
 
 Lets the skills route mechanical pieces of a task (drafts, research summaries, boilerplate) to Ollama Cloud models and keep judgment, tests and git on Claude.
 
-1. Paste `ollama-addon/CLAUDE_SECTION.md` into `~/.claude/CLAUDE.md` and edit the model roster.
-2. For headless background work, set up Track A: [ollama-addon/README.md](ollama-addon/README.md).
+1. Copy the `ollama-addon/` folder to `~/.claude/ollama-addon/` (the skills read its README and template from there).
+2. Paste `ollama-addon/CLAUDE_SECTION.md` into `~/.claude/CLAUDE.md` and edit the model roster.
+3. For headless background work, set up Track A: [ollama-addon/README.md](ollama-addon/README.md).
 
 Without that section in `CLAUDE.md`, every skill runs on Claude only and never mentions Ollama.
 

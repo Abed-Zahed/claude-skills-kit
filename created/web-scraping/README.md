@@ -30,6 +30,22 @@ State and log files are created on first use under `%USERPROFILE%\research_cache
 - `%USERPROFILE%\research_cache\_budget\research_budget_state.json`, the budget ledger.
 - `%USERPROFILE%\research_cache\_budget\research_tool_log.jsonl`, one JSON line per gated call, appended.
 
+## Setup
+
+Required: none. WebSearch and WebFetch are built in.
+
+| Item | Required or optional | Install command and check |
+|---|---|---|
+| Exa MCP server | optional | Install it in Claude Code MCP settings, for example `claude mcp add exa -- <exa-server-command>`, then confirm a tool whose name starts with `mcp__exa__` or `mcp__claude_ai_Exa__` is available in this session. |
+| Gemini MCP server | optional | `claude mcp add gemini -- <gemini-server-command>`, then confirm a tool whose name starts with `mcp__gemini__` is available in this session. |
+| Firecrawl MCP server or claude.ai connector | optional | `claude mcp add firecrawl -- <firecrawl-server-command>`, or enable the Firecrawl connector in Claude settings, then confirm a tool whose name starts with `mcp__firecrawl__` or `mcp__claude_ai_Firecrawl__` is available in this session. |
+| curl | optional | Install with Git for Windows or `winget install curl.curl`; check `curl --version`. |
+| Python 3 with pypdf | optional | Install Python 3, then run `python -m pip install pypdf`; check `python -c "import pypdf"`. |
+| Firecrawl budget hook | optional | Copy `hooks/firecrawl_budget_gate.ps1` to `~/.claude/hooks/`, merge `hooks/settings-snippet.json` into `~/.claude/settings.json`, restart Claude Code, then check `grep firecrawl_budget_gate ~/.claude/settings.json`. |
+| RESEARCH_HOME environment variable | optional | Set `export RESEARCH_HOME="$HOME/research_cache"` in your shell profile if you want a non-default cache; check `printf '%s\n' "${RESEARCH_HOME:-$HOME/research_cache}"`. |
+
+Run `/web-scraping setup` after installing to print a status for each item and write the marker file when all required items pass.
+
 ## How the budget gate decides
 
 The hook runs before a tool call, reads the tool name and its input from standard input, and answers allow (no output) or deny (a JSON decision with a reason). It ignores any tool that does not match `mcp__(firecrawl|claude_ai_Firecrawl|gemini)__.*`. Both Firecrawl tool prefixes, the MCP server (`mcp__firecrawl__*`) and the claude.ai connector (`mcp__claude_ai_Firecrawl__*`), are gated.

@@ -1,9 +1,23 @@
 ---
 name: task-status
-description: Report the status of Agent-tool subagent dispatches from this and prior sessions by reading the local agent_task_log.jsonl. Use after an interruption, spend-limit stop, crash, or fresh session to recover what background agent work was in flight. Shows pending versus finished dispatches with results. Zero API cost, reads a local log only. Works on stock Claude Code; the log is optional and may be empty until the logging hook is installed.
+description: 'Report the status of Agent-tool subagent dispatches from this and prior sessions by reading the local agent_task_log.jsonl. Use after an interruption, spend-limit stop, crash, or fresh session to recover what background agent work was in flight. Shows pending versus finished dispatches with results. Zero API cost, reads a local log only. Works on stock Claude Code; the log is optional and may be empty until the logging hook is installed. Setup: required: Windows PowerShell 5.1+, the logging hook hooks/log_agent_task.ps1 copied to ~/.claude/hooks/, and the hooks/settings-snippet.json entries merged into ~/.claude/settings.json (check: grep for log_agent_task in ~/.claude/settings.json). Without the hook the log stays empty, so treat it as required. Run /task-status setup after installing.'
 ---
 
 # /task-status
+
+## Setup check (first run)
+
+When it runs: when the user types `/task-status setup`, or automatically before the first real run when the marker file `.setup_ok` in this skill's own folder (the folder holding this SKILL.md, user or project install) does not exist.
+
+| Item | Required or optional | How to check |
+|---|---|---|
+| Windows PowerShell 5.1+ | required | `powershell -NoProfile -Command "if ($PSVersionTable.PSVersion -ge [version]'5.1') { exit 0 } else { exit 1 }"` |
+| Logging hook file | required | `test -r ~/.claude/hooks/log_agent_task.ps1` |
+| Settings entries | required | `grep -q log_agent_task ~/.claude/settings.json` |
+
+Without the hook the log stays empty, so treat it as required. Print OK / MISSING per item. If a REQUIRED item is missing, stop before the task, explain its purpose in one line, and offer step-by-step setup, asking before installing, editing settings.json, or creating files outside the skill folder. Never install silently. If only OPTIONAL items are missing, say in one line what is lost and continue.
+
+When every required item passes, write today's date to the marker file (`date +%F > <this skill folder>/.setup_ok`), then continue the user's original request (if any).
 
 Answers "what agent tasks did I dispatch, and which are still open?" without retained conversation context. Reads a local append-only log that optional hooks write on every Agent-tool dispatch, so it can survive interruptions, spend-limit stops, and new sessions.
 

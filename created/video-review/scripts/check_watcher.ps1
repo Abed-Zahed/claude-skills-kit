@@ -32,5 +32,5 @@ Start-Sleep -Seconds 2
 
 if (Test-WatcherRunning) { exit 0 }
 
-Write-Host "Error: The watcher task '$taskName' could not be started after retry. If it is disabled, enable it with Enable-ScheduledTask, or re-register it with register_ollama_watcher_task.ps1 from ollama-addon/track-a."
+Write-Host "Error: The watcher task '$taskName' could not be started after retry. If it is disabled, enable it with Enable-ScheduledTask, or re-register it with register_ollama_watcher_task.ps1 from ~/.claude/ollama-addon/track-a."
 exit 1

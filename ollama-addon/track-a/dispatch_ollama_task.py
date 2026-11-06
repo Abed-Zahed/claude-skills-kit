@@ -9,6 +9,7 @@ import os
 import re
 import sys
 import tempfile
+import threading
 import time
 from pathlib import Path
 
@@ -119,6 +120,13 @@ def run(args):
     task_name = os.environ.get("TRACK_A_TASK_NAME", DEFAULT_TASK_NAME)
 
     done_dir.mkdir(parents=True, exist_ok=True)
+    done_path = done_dir / f"{args.slug}_done.txt"
+    if done_path.exists():
+        # A done file from an earlier run with this slug would end the wait at once
+        # with stale output (retry, resume, rerun). Keep it, but out of the way.
+        archive = drop / "reviewed"
+        archive.mkdir(parents=True, exist_ok=True)
+        done_path.replace(archive / f"{args.slug}_done.stale-{int(time.time())}.txt")
     write_task_file(
         task_dir,
         args.slug,
@@ -126,7 +134,6 @@ def run(args):
     )
 
     inflight_path = task_dir / f"{args.slug}.txt.inflight"
-    done_path = done_dir / f"{args.slug}_done.txt"
     elapsed = 0.0
     while elapsed < args.timeout:
         if done_path.exists():
@@ -188,6 +195,12 @@ def build_parser():
 def selftest():
     """Exercise the writer against a temporary drop folder, then print ok."""
 
+    def finish_later(name):
+        # The real watcher writes the done file after the task is queued.
+        timer = threading.Timer(0.3, (done / f"{name}_done.txt").write_text, ("ok\n",))
+        timer.start()
+        return ["--poll-interval", "0.1", "--timeout", "5"]
+
     def call(argv):
         try:
             main(argv)
@@ -204,10 +217,12 @@ def selftest():
         done.mkdir()
         os.environ["TRACK_A_DIR"] = str(drop)
         try:
-            # (a) headers land between the model line and the prompt.
-            (done / "alpha_done.txt").write_text("ok\n", encoding="utf-8")
+            # (a) headers land between the model line and the prompt; a stale
+            # done file from an earlier run is archived, not returned.
+            (done / "alpha_done.txt").write_text("STALE\n", encoding="utf-8")
             code = call(
-                [
+                finish_later("alpha")
+                + [
                     "--slug",
                     "alpha",
                     "--working-dir",
@@ -229,6 +244,9 @@ def selftest():
             assert lines[2] == "BudgetKey=rf_selftest", lines
             assert lines[3] == "BudgetBase=60", lines
             assert lines[4:] == ["PROMPT LINE"], lines
+            assert (done / "alpha_done.txt").read_text(encoding="utf-8") == "ok\n"
+            stale = list((drop / "reviewed").glob("alpha_done.stale-*.txt"))
+            assert len(stale) == 1, stale
 
             # (b) an unknown header key exits 2 and writes nothing.
             code = call(
@@ -251,9 +269,9 @@ def selftest():
             # (c) --prompt-file content is used.
             prompt_file = drop / "prompt_from_file.md"
             prompt_file.write_text("FROM FILE", encoding="utf-8")
-            (done / "beta_done.txt").write_text("ok\n", encoding="utf-8")
             code = call(
-                [
+                finish_later("beta")
+                + [
                     "--slug",
                     "beta",
                     "--working-dir",

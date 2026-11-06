@@ -21,7 +21,8 @@ Model names come from the "Ollama Cloud delegation" table in `~/.claude/CLAUDE.m
 - Run `powershell -NoProfile -File "<TRACK_A_HOME>/check_watcher.ps1"`. If it exits non-zero, tell the user Track A is down and ask whether to wait or run this research in vanilla mode. Never fall back silently.
 
 ## Fan out (replaces SKILL.md section 3)
-- Lane prompt = the text below the dashed line of the Track A research preamble (`<TRACK_A_HOME>/docs/track_a_research_preamble.txt` when present), then the filled `worker_prompt.md`. Budget line in the worker prompt: "about 40 tool calls".
+- Lane prompt = the text below the dashed line of the Track A research preamble (`<TRACK_A_HOME>/docs/track_a_research_preamble.txt` when present), then the filled `worker_prompt.md`. Budget line in the worker prompt: "about 40 tool calls". Research rules line: "the RESEARCH TOOL POLICY at the top of this prompt; for GitHub data use the authenticated `gh` CLI, not the anonymous API".
+- Retries and resumes reuse the lane's slug: the helper moves a stale `done/` file to `reviewed/` before queueing, so an old result is never returned.
 - One background Bash call per lane, all in one message (the watcher enforces the lane cap on its own, so no waves here):
   ```
   python "<TRACK_A_HOME>/dispatch_ollama_task.py" --slug rf_<slug>_<X> --working-dir "<run>" --model <row writer>

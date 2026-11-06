@@ -31,12 +31,12 @@ One question in, one cited report out. Every claim in the report carries a sourc
 - After approval write `<run>/plan.md`: question, constraints, criteria, and the approved lines with their letters. Nothing is dispatched before this file exists.
 
 ## 3. Fan out (vanilla)
-- Fill [worker_prompt.md](worker_prompt.md) once per lane: the exact sub-question, the original question and constraints, output path `<run>/agent_<X>.md`, the run folder, a budget of about 25 tool calls, and the research rules. The research rules are the user's own research rules if their CLAUDE.md or a research skill defines them; otherwise "WebSearch to find, WebFetch to read, read files already in the run folder before fetching".
-- Dispatch with the Agent tool, `subagent_type: general-purpose`, foreground, **at most 2 calls per message**. Wait for both, then send the next wave. Never mention waves to the user.
+- Fill [worker_prompt.md](worker_prompt.md) once per lane: the exact sub-question, the original question and constraints, output path `<run>/agent_<X>.md`, the run folder, a budget of about 25 tool calls, and the research rules. The research rules are the user's own research rules if their CLAUDE.md or a research skill defines them; otherwise "WebSearch to find, WebFetch to read, read files already in the run folder before fetching". Always add: "for GitHub data use the authenticated `gh` CLI, not the anonymous API" (the anonymous API rate-limits after a few lanes).
+- Dispatch with the Agent tool, `subagent_type: general-purpose`, `model: sonnet`, foreground, **at most 2 calls per message**. Wait for both, then send the next wave. Never mention waves to the user.
 
 ## 4. Lane check and failures
 - After the fan-out, run `dedup_sources.py "<run>" --status` again.
-- A lane that is not done: retry once with a sharper prompt (name what was missing), then once with a different worker (vanilla: `model: opus` if the first ran on the default model, else `sonnet`), then drop it. A dropped lane is named in the report's Gaps section. The run continues.
+- A lane that is not done: retry once with a sharper prompt (name what was missing), then once with a different worker (vanilla: `model: opus`), then drop it. A dropped lane is named in the report's Gaps section. The run continues.
 
 ## 5. Dedup sources
 - Run `python <skill>/scripts/dedup_sources.py "<run>"`. It writes `<run>/sources.md`: one numbered row per distinct source after URL normalization, with the lanes that cited it. These numbers are the citation numbers for fanin.md and the report.

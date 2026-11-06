@@ -11,7 +11,8 @@ from urllib.parse import parse_qsl, urlencode, urlsplit, urlunsplit
 
 
 LANE_PATTERN = re.compile(r"^([A-Z])\. ", re.MULTILINE)
-URL_PATTERN = re.compile(r"https?://[^\s)\]>\"'<]+")
+URL_PATTERN = re.compile(r"https?://[^\s)\]>\"'<`]+")
+LOCAL_HOSTS = ("localhost", "127.0.0.1", "0.0.0.0")
 TRACKING_PARAMS = frozenset({"fbclid", "gclid", "ref"})
 DONE_LINE = "STATUS: DONE"
 
@@ -69,6 +70,8 @@ def collect(run_dir, lanes):
         text = read_text(run_dir / f"agent_{letter}.md")
         for match in URL_PATTERN.finditer(text):
             url = match.group(0).rstrip(".,;:")
+            if urlsplit(url).hostname in LOCAL_HOSTS:
+                continue  # an API endpoint a worker mentioned, not a source
             entry = found.setdefault(normalize(url), [url, []])
             if letter not in entry[1]:
                 entry[1].append(letter)
@@ -103,7 +106,8 @@ def selftest():
         lanes = {
             "A": "A\nSee https://www.Example.com/page/?utm_source=x#top\n"
                  "and https://other.org/x.\nSTATUS: DONE\n",
-            "B": "B\nAlso http://example.com/page\nSTATUS: DONE\n",
+            "B": "B\nAlso http://example.com/page and `http://localhost:1234/v1`\n"
+                 "STATUS: DONE\n",
             "C": "C\nHalf written https://only-c.net\n",
         }
         for letter, text in lanes.items():

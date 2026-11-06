@@ -22,7 +22,7 @@ GENERIC = r"[A-Z]:[\\/](Projects|Work)\b|C:[\\/]Users[\\/](?!<|%|\$)|chat_id\.tx
 # Your own names, usernames and private project names: one regex per line in
 # tests/private_patterns.local (gitignored), so the shipped test never lists them.
 _local = ROOT / "tests" / "private_patterns.local"
-_extra = [ln.strip() for ln in _local.read_text(encoding="utf-8").splitlines() if ln.strip() and not ln.startswith("#")] if _local.exists() else []
+_extra = [ln.strip() for ln in _local.read_text(encoding="utf-8").splitlines() if ln.strip() and not ln.lstrip().startswith("#")] if _local.exists() else []
 PRIVATE = re.compile("|".join([GENERIC, *_extra]), re.I)
 MODEL = re.compile(r"\b(deepseek-v\d|glm-\d|kimi-k\d|qwen\d)", re.I)
 # Skills whose job depends on something outside stock Claude Code.
@@ -61,6 +61,8 @@ with tempfile.TemporaryDirectory() as tmp:
             body = f.read_text(encoding="utf-8")
             for m in PRIVATE.finditer(body):
                 fail(f"ollama-addon/{f.relative_to(home / 'ollama-addon').as_posix()}: private string {m.group(0)!r}")
+            if f.suffix in {'.ps1', '.py'} and MODEL.search(body):
+                fail(f"ollama-addon/{f.name}: hardcoded model name {MODEL.search(body).group(0)!r}")
     for sd in SKILL_DIRS:
         dest = home / "skills" / sd.name
         shutil.copytree(sd, dest)

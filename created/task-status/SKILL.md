@@ -1,6 +1,6 @@
 ---
 name: task-status
-description: 'Report the status of Agent-tool subagent dispatches from this and prior sessions by reading the local agent_task_log.jsonl. Use after an interruption, spend-limit stop, crash, or fresh session to recover what background agent work was in flight. Shows pending versus finished dispatches with results. Zero API cost, reads a local log only. Works on stock Claude Code; the log is optional and may be empty until the logging hook is installed. Setup: required: Windows PowerShell 5.1+, the logging hook hooks/log_agent_task.ps1 copied to ~/.claude/hooks/, and the hooks/settings-snippet.json entries merged into ~/.claude/settings.json (check: grep for log_agent_task in ~/.claude/settings.json). Without the hook the log stays empty, so treat it as required. Run /task-status setup after installing.'
+description: 'Report the status of Agent-tool subagent dispatches from this and prior sessions by reading the local agent_task_log.jsonl. Use after an interruption, spend-limit stop, crash, or fresh session to recover what background agent work was in flight. Shows pending versus finished dispatches with results. Zero API cost, reads a local log only. Needs the bundled logging hook installed once; without it the log stays empty. Setup: required: Windows PowerShell 5.1+, the logging hook hooks/log_agent_task.ps1 copied to ~/.claude/hooks/, and the hooks/settings-snippet.json entries merged into ~/.claude/settings.json (check: grep for log_agent_task in ~/.claude/settings.json). Without the hook the log stays empty, so treat it as required. Run /task-status setup after installing.'
 ---
 
 # /task-status
@@ -37,7 +37,7 @@ Optional hooks in ~/.claude/settings.json call ~/.claude/hooks/log_agent_task.ps
 
 A dispatch is finished when a SubagentStop (or a completed PostToolUse) line shares its agent_id; otherwise it is pending.
 
-The skill itself only reads the log. It needs no model call, network call, MCP server, or external service. If the optional logging hook is not installed, the log may not exist and the skill says so.
+The skill itself only reads the log. It needs no model call, network call, MCP server, or external service. The logging hook is required to produce the log; if it is not installed yet, the setup check stops and offers to install it.
 
 ## How to run
 

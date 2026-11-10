@@ -9,6 +9,7 @@ Claude Code skills for engineering, research, job applications and decision maki
 | `created/` | Skills written for this kit |
 | `collected/` | Skills by other authors, redistributed under their license, credited below |
 | `ollama-addon/` | Optional: the `CLAUDE.md` delegation section and the Track A drop-folder runner that the add-on files use |
+| `report-comments/` | Drop-in comment widget for HTML reports: select text, comment, copy all comments back into the session |
 
 ## Created skills
 
